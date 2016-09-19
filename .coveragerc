@@ -1,0 +1,3 @@
+[run]
+source = porygo_nz
+omit = porygo_nz/test*
