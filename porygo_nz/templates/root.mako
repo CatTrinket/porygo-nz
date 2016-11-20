@@ -1,4 +1,3 @@
-<!DOCTYPE html>
-<title>porygo.nz</title>
+<%inherit file="base.mako" />
 
 Hello world!
