@@ -15,11 +15,16 @@ def main(global_config, **settings):
 
     config = pyramid.config.Configurator(
         settings=settings, root_factory=porygo_nz.resources.get_root)
+
     config.include('pyramid_mako')
+
+    config.add_static_view('static', 'porygo_nz:static')
+
     config.add_request_method(
         porygo_nz.resources.request_generation, name='generation', reify=True)
     config.add_request_method(
         porygo_nz.db.request_session, name='session', reify=True)
+
     config.scan()
 
     return config.make_wsgi_app()
