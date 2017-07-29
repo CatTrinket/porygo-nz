@@ -83,7 +83,10 @@ nav#subnav {
     line-height: 1.2;
 }
 
-ul#breadcrumbs { margin-left: 100px; }
+ul#breadcrumbs {
+    align-items: baseline;
+    margin-left: 100px;
+}
 
 ul#breadcrumbs > li:not(:last-child)::after {
     content: '»';
@@ -91,8 +94,8 @@ ul#breadcrumbs > li:not(:last-child)::after {
 }
 
 ul#breadcrumbs > li:last-child {
-    width: 100%;
-    font-size: 1.5rem;
+    font-size: 1.2em;
+    font-weight: bold;
 }
 
 @media (max-width: 768px) {
