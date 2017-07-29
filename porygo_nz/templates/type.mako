@@ -1,9 +1,9 @@
 <%inherit file="base.mako" />
-<%block name="title">${type.identifier.capitalize()} - Types - porygo.nz</%block>
+<%block name="title">${type.name} - Types - porygo.nz</%block>
 
 % if request.root.generation_index is not None:
-    IT'S ${type.identifier.upper()} IN GEN
+    IT'S ${type.name.upper()} IN GEN
     ${request.root.generation_index.generation.id}!!!!
 % else:
-    IT'S ${type.identifier.upper()}!!!!
+    IT'S ${type.name.upper()}!!!!
 % endif
