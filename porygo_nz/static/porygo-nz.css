@@ -177,3 +177,63 @@ td.ability-cell { height: 2.5rem; }
 td.stat-cell { width: 3ch; text-align: right; }
 th.stat-cell { padding-left: 0; padding-right: 0; }
 th.stat-cell:last-child { padding-right: 1rem; }
+
+/* Type icons */
+a.type {
+    display: inline-block;
+    width: 4.5em;
+    text-align: center;
+    padding: 1px;
+    border: 1px solid;
+    border-radius: 5px;
+    color: white;
+    text-shadow: 1px 0 black, 1px 1px black, 0 1px black;
+}
+
+a.type:hover { text-decoration: underline; }
+
+ul.type-list {
+    display: flex;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+a.type-normal { background: #ADAD7B; border-color: #735A4A;
+                box-shadow: 0 0 0 1px #735A4A80 inset; }
+a.type-fire { background: #F75231; border-color: #943129;
+              box-shadow: 0 0 0 1px #94312980 inset; }
+a.type-water { background: #6B94F7; border-color: #847B73;
+               box-shadow: 0 0 0 1px #847B7380 inset; }
+a.type-grass { background: #7BCE52; border-color: #5A8442;
+               box-shadow: 0 0 0 1px #5A844280 inset; }
+a.type-electric { background: #FFD631; border-color: #BDA53A;
+                  box-shadow: 0 0 0 1px #BDA53A80 inset; }
+a.type-ice { background: #9CDEDE; border-color: #9494A5;
+             box-shadow: 0 0 0 1px #9494A580 inset; }
+a.type-fighting { background: #943129; border-color: #4A423A;
+                  box-shadow: 0 0 0 1px #4A423A80 inset; }
+a.type-poison { background: #A542A5; border-color: #4A3A52;
+                box-shadow: 0 0 0 1px #4A3A5280 inset; }
+a.type-ground { background: #E6C56B; border-color: #8C6B31;
+                box-shadow: 0 0 0 1px #8C6B3180 inset; }
+a.type-flying { background: #AD94F7; border-color: #7A5A9C;
+                box-shadow: 0 0 0 1px #7A5A9C80 inset; }
+a.type-psychic { background: #FF5A8C; border-color: #946363;
+                 box-shadow: 0 0 0 1px #94636380 inset; }
+a.type-bug { background: #ADBD21; border-color: #7B9410;
+             box-shadow: 0 0 0 1px #7B941080 inset; }
+a.type-rock { background: #BDA53A; border-color: #8C6B31;
+              box-shadow: 0 0 0 1px #8C6B3180 inset; }
+a.type-ghost { background: #735A9C; border-color: #4A3A52;
+               box-shadow: 0 0 0 1px #4A3A5280 inset; }
+a.type-dragon { background: #733AFF; border-color: #4A3A94;
+                box-shadow: 0 0 0 1px #4A3A9480 inset; }
+a.type-dark { background: #735A4A; border-color: #4A423A;
+              box-shadow: 0 0 0 1px #4A423A80 inset; }
+a.type-steel { background: #BDBDD6; border-color: #847B73;
+               box-shadow: 0 0 0 1px #847B7380 inset; }
+a.type-fairy { background: #FFA5E6; border-color: #B56B84;
+               box-shadow: 0 0 0 1px #B56B8480 inset; }
+a.type-question { background: #6BA594; border-color: #216B63;
+                  box-shadow: 0 0 0 1px #216B6380 inset; }

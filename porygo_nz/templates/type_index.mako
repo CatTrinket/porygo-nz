@@ -5,6 +5,6 @@
 
 <ul>
     % for type in types:
-        <li>${h.link(type, type.name)}</li>
+        <li>${h.type_link(type)}</li>
     % endfor
 </ul>

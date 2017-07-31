@@ -25,9 +25,7 @@
 
         <td class="pokemon-cell">${h.pokemon_form_link(pokemon_form)}</td>
 
-        <td class="type-cell">
-            ${'/'.join(type.name for type in pokemon_form.types)}
-        </td>
+        <td class="type-cell">${h.type_list(pokemon_form.types)}</td>
 
         <td class="ability-cell">
             <ul class="ability-list">
