@@ -9,7 +9,7 @@ body {
     margin: 0;
     background: #F0F0F0;
     line-height: 1.4;
-    font-family: Noto Sans;
+    font-family: Noto Sans, DejaVu Sans, Helvetica, Calibri, sans-serif;
 }
 
 /* Header */
