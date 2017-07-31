@@ -12,9 +12,10 @@ class Root:
 
     generation = None
 
-    def __init__(self):
+    def __init__(self, request):
         self.indices = {}
         self.generation_index = None
+        self.request = request
 
     def __getitem__(self, key):
         """Return the corresponding Index or GenerationIndex."""
@@ -31,6 +32,7 @@ class Root:
         except sa.orm.exc.NoResultFound:
             raise KeyError
 
+        self.request.session.generation_id = generation.id
         self.generation_index = GenerationIndex(generation, self)
 
         return self.generation_index
@@ -69,7 +71,7 @@ class Index:
         """Look up the given key in the associated table."""
 
         query = (
-            porygo_nz.db.DBSession.query(self.table)
+            self.root_instance.request.session.query(self.table)
             .filter_by(identifier=key)
         )
 
@@ -119,7 +121,7 @@ def request_generation(request):
 def get_root(request):
     """Get a root resource."""
 
-    root = Root()
+    root = Root(request)
     root.add_index(TypeIndex)
 
     return root
