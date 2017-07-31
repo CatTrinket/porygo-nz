@@ -1,9 +1,11 @@
 <%inherit file="base.mako" />
+<%namespace name="t" file="helpers/tables.mako" />
 <%block name="title">${type.name} - Types - porygo.nz</%block>
 
-% if request.root.generation_index is not None:
-    IT'S ${type.name.upper()} IN GEN
-    ${request.root.generation_index.generation.id}!!!!
-% else:
-    IT'S ${type.name.upper()}!!!!
-% endif
+<h1>${type.name}</h1>
+
+type matchups go here
+
+<h1>Pokémon</h1>
+
+${t.pokemon_table(pokemon)}

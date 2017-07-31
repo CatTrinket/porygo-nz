@@ -29,4 +29,11 @@ class TypeView:
     def view(self):
         """A type's page."""
 
-        return {'type': self.request.context}
+        type = self.request.context
+        generation_id = None
+
+        if self.request.root.generation_index is not None:
+            generation_id = self.request.root.generation_index.generation.id
+
+        return {'type': self.request.context,
+                'pokemon': type.pokemon[generation_id or max(type.pokemon)]}

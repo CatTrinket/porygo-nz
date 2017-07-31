@@ -18,6 +18,7 @@ header {
     flex-direction: column;
 }
 
+/* Main nav */
 nav {
     display: flex;
     align-items: baseline;
@@ -76,6 +77,7 @@ nav#main-nav li { padding: 0 0.5rem; }
     }
 }
 
+/* Subnav */
 nav#subnav {
     background: #FFFFFF;
     border-bottom: 2px solid #CCCCCC;
@@ -115,13 +117,63 @@ main > *:first-child { margin-top: 0; }
 
 /*** General styles ***/
 
-a {
-    color: #5094B8;
-    text-decoration: none;
-}
-
+/* Links */
+a { color: #5094B8; text-decoration: none; }
 a:hover { color: #68ACD0; }
+main a { font-weight: bold; }
 
-main a {
-    font-weight: bold;
+/* Headings */
+h1 {
+    background: #5094B8;
+    font-size: 1.5rem;
+    color: #FFFFFF;
+    border: 2px solid #4884A5;
+    border-radius: 0.375rem;
+    padding: 0.25rem 0.5rem;
+    margin: 1.25rem calc(-0.5rem - 2px);
+    line-height: 1;
 }
+
+/* Images */
+img { vertical-align: middle; }
+img.pokemon-icon { background: url(/static/circle.svg) center no-repeat; }
+
+/* Misc. */
+*.pokemon-form-name { font-size: 0.8rem; font-style: italic; }
+
+*.hidden-ability { font-style: italic; }
+
+ul.ability-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    font-size: 0.75rem;
+    line-height: 1;
+}
+
+/* Tables */
+table {
+    border-collapse: collapse;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+tbody { border: 2px solid #CCCCCC; }
+
+tbody > tr:nth-child(odd) { background-color: #F8F8F8; }
+tbody > tr:nth-child(even) { background-color: #E8E8E8; }
+
+td, th { padding: 0.125rem 0.5rem; }
+td:first-child, th:first-child { padding-left: 1.5rem; }
+td:last-child, th:last-child { padding-right: 1.5rem; }
+
+td.pokemon-icon-cell { padding-right: 0; }
+td.pokemon-icon-cell + td { padding-left: 0; }
+td.pokemon-icon-cell:first-child {
+     padding-left: calc(1.5rem - 5px);  /* 1.5rem to the background circle */
+}
+
+td.ability-cell { height: 2.5rem; }
+td.stat-cell { width: 3ch; text-align: right; }
+th.stat-cell { padding-left: 0; padding-right: 0; }
+th.stat-cell:last-child { padding-right: 1rem; }
