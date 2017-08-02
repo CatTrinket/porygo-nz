@@ -14,7 +14,7 @@
     <header>
         <nav id="main-nav">
             <a href="/" id="site-title">
-                <img src="/static/lambda.png">porygo.nz
+                <img src="/static/lambda.png" alt="">porygo.nz
             </a>
 
             <ul>

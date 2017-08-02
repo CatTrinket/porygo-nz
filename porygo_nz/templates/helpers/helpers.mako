@@ -16,5 +16,5 @@ ${text or thing.name}\
     % for type in types:
     <li>${type_link(type)}</li>
     % endfor
-</ul>
+</ul>\
 </%def>
