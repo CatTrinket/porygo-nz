@@ -158,25 +158,51 @@ table {
     white-space: nowrap;
 }
 
-tbody { border: 2px solid #CCCCCC; }
+tbody { border: solid #CCCCCC; border-width: 0 2px; }
+tbody:first-of-type { border-top-width: 2px; }
+tbody:last-of-type { border-bottom-width: 2px; }
+tbody:nth-of-type(odd) { background-color: #F8F8F8; }
+tbody:nth-of-type(even) { background-color: #E8E8E8; }
 
-tbody > tr:nth-child(odd) { background-color: #F8F8F8; }
-tbody > tr:nth-child(even) { background-color: #E8E8E8; }
+tbody + tbody { border-top: 1px solid #D8D8D8; }
+tbody:nth-of-type(odd) > tr + tr { border-top: 1px ridge #E8E8E8; }
+tbody:nth-of-type(even) > tr + tr { border-top: 1px ridge #D8D8D8; }
 
-td, th { padding: 0.125rem 0.5rem; }
-td:first-child, th:first-child { padding-left: 1.5rem; }
-td:last-child, th:last-child { padding-right: 1.5rem; }
+td, th { padding: 0 0.5rem; }
+td:first-child, th:first-child { padding-left: 2.5rem; }
+td:last-child, th:last-child { padding-right: 2.5rem; }
+td:empty, th:empty { padding: 0; }
 
-td.pokemon-icon-cell { padding-right: 0; }
-td.pokemon-icon-cell + td { padding-left: 0; }
-td.pokemon-icon-cell:first-child {
-     padding-left: calc(1.5rem - 5px);  /* 1.5rem to the background circle */
+td.pokemon-collapse-cell { width: 1rem; padding-right: 0; }
+td.pokemon-collapse-cell:first-child { padding-left: 0.5rem; }
+
+td.pokemon-icon-cell {
+    padding-right: 0;
+    padding-left: calc(0.5rem - 5px);  /* 0.5rem to the background circle */
 }
+td.pokemon-icon-cell + td { padding-left: 0; }
+td.pokemon-icon-cell:first-child { padding-left: calc(1.5rem - 5px); }
 
 td.ability-cell { height: 2.5rem; }
 td.stat-cell { width: 3ch; text-align: right; }
 th.stat-cell { padding-left: 0; padding-right: 0; }
-th.stat-cell:last-child { padding-right: 1rem; }
+th.stat-cell:last-child { padding-right: 2rem; }
+
+/* Pokémon table alt. form collapsing */
+input.pokemon-collapse { display: none; }
+
+label.pokemon-collapse-label,
+label.pokemon-expand-label {
+    display: block;
+    height: 1rem;
+    width: 1rem;
+    cursor: pointer;
+}
+
+label.pokemon-collapse-label { background: url(/static/arrow-down.svg); }
+label.pokemon-expand-label { background: url(/static/arrow-right.svg); }
+
+*.collapsed-only { display: none; }
 
 /* Type icons */
 a.type {

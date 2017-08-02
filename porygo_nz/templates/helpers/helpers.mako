@@ -6,15 +6,6 @@ ${text or thing.name}\
 </a>\
 </%def>
 
-<%def name="pokemon_form_link(form)">\
-<a>\
-${form.pokemon.name}\
-% if form.name:
- <span class="pokemon-form-name">${form.name}</span>\
-% endif
-</a>\
-</%def>
-
 <%def name="type_link(type)">\
 <a href="${req.resource_path(type.__parent__, type.__name__)}"\
    class="type type-${type.identifier}">${type.name}</a>\

@@ -1,9 +1,28 @@
 <%namespace name="h" file="helpers.mako" />
 
 <%def name="pokemon_table(pokemon_forms)">
+<%
+    import itertools
+    pokemon = itertools.groupby(pokemon_forms, lambda form: form.pokemon)
+    pokemon = [(key, list(group)) for (key, group) in pokemon]
+%>
+
+% for (a_pokemon, forms) in pokemon:
+    % if len(forms) > 1:
+        <input
+            type="checkbox" id="pokemon-collapse-${a_pokemon.identifier}"
+            class="pokemon-collapse pokemon-collapse-${a_pokemon.identifier}"
+            % if len(forms) > 6:
+                checked
+            % endif
+        >
+    % endif
+% endfor
+
 <table>
 <thead>
     <tr>
+        <th></th>
         <th colspan="2">Pokémon</th>
         <th>Type</th>
         <th>Abilities</th>
@@ -15,35 +34,67 @@
         <th class="stat-cell">Spe</th>
     </tr>
 </thead>
-<tbody>
-    % for pokemon_form in pokemon_forms:
-    <tr>
-        <td class="pokemon-icon-cell">
-            <img src="/static/pokemon-icons/${pokemon_form.identifier}.png"
-                 class="pokemon-icon">
-        </td>
 
-        <td class="pokemon-cell">${h.pokemon_form_link(pokemon_form)}</td>
-
-        <td class="type-cell">${h.type_list(pokemon_form.types)}</td>
-
-        <td class="ability-cell">
-            <ul class="ability-list">
-                <li><a>Ability 1</a></li>
-                % if pokemon_form.pokemon_id % 2 == 0:
-                    <li><a>A Second Ability</a></li>
-                % endif
-                % if pokemon_form.pokemon_id % 3 == 0:
-                    <li class="hidden-ability"><a>Hidden Ability</a></li>
-                % endif
-            </ul>
-        </td>
-
-        % for n in range(6):
-            <td class="stat-cell">123</td>
+% for (a_pokemon, pokemon_forms) in pokemon:
+    <tbody class="pokemon-${a_pokemon.identifier}">
+        % for pokemon_form in pokemon_forms:
+            ${pokemon_form_row(pokemon_form, len(pokemon_forms) > 1)}
         % endfor
-    </tr>
-    % endfor
-</tbody>
+    </tbody>
+% endfor
 </table>
+</%def>
+
+<%def name="pokemon_form_row(form, is_multiform)">
+<tr class="${'expanded-only' if not form.is_default else ''}">
+    <td class="pokemon-collapse-cell">
+        % if is_multiform:
+            % if form.form_id == 1:
+                <label for="pokemon-collapse-${form.pokemon.identifier}"
+                       class="pokemon-collapse-label expanded-only">
+                </label>
+            % endif
+
+            % if form.is_default:
+                <label for="pokemon-collapse-${form.pokemon.identifier}"
+                       class="pokemon-expand-label collapsed-only">
+                </label>
+            % endif
+        % endif
+    </td>
+
+    <td class="pokemon-icon-cell">
+        <img src="/static/pokemon-icons/${form.identifier}.png"
+             class="pokemon-icon" alt="">
+    </td>
+
+    <td class="pokemon-cell">
+        <a>
+            ${form.pokemon.name}
+            % if form.name:
+                <span class="pokemon-form-name expanded-only">
+                    ${form.name}
+                </span>
+            % endif
+        </a>
+    </td>
+
+    <td class="type-cell">${h.type_list(form.types)}</td>
+
+    <td class="ability-cell">
+        <ul class="ability-list">
+            <li><a>Ability 1</a></li>
+            % if form.pokemon_id % 2 == 0:
+                <li><a>A Second Ability</a></li>
+            % endif
+            % if form.pokemon_id % 3 == 0:
+                <li class="hidden-ability"><a>Hidden Ability</a></li>
+            % endif
+        </ul>
+    </td>
+
+    % for n in range(6):
+        <td class="stat-cell">123</td>
+    % endfor
+</tr>
 </%def>
