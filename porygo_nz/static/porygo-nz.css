@@ -208,12 +208,16 @@ label.pokemon-expand-label { background: url(/static/arrow-right.svg); }
 a.type {
     display: inline-block;
     width: 4.5em;
-    text-align: center;
+
     padding: 1px;
-    border: 1px solid;
+    border: 1px solid #000000;  /* Black as fallback */
+    border-color: var(--type-border);
     border-radius: 5px;
+    box-shadow: 0 0 1.2px var(--type-border) inset;
+
+    text-align: center;
     color: #FFFFFF;
-    text-shadow: 1px 0 black, 1px 1px black, 0 1px black;
+    text-shadow: 1px 0 #000000, 1px 1px #000000, 0 1px #000000;
 }
 
 a.type:hover { text-decoration: underline; }
@@ -225,41 +229,22 @@ ul.type-list {
     margin: 0;
 }
 
-a.type-normal { background: #ADAD7B; border-color: #735A4A;
-                box-shadow: 0 0 1.2px #735A4A inset; }
-a.type-fire { background: #F75231; border-color: #943129;
-              box-shadow: 0 0 1.2px #943129 inset; }
-a.type-water { background: #6B94F7; border-color: #847B73;
-               box-shadow: 0 0 1.2px #847B73 inset; }
-a.type-grass { background: #7BCE52; border-color: #5A8442;
-               box-shadow: 0 0 1.2px #5A8442 inset; }
-a.type-electric { background: #FFD631; border-color: #BDA53A;
-                  box-shadow: 0 0 1.2px #BDA53A inset; }
-a.type-ice { background: #9CDEDE; border-color: #9494A5;
-             box-shadow: 0 0 1.2px #9494A5 inset; }
-a.type-fighting { background: #943129; border-color: #4A423A;
-                  box-shadow: 0 0 1.2px #4A423A inset; }
-a.type-poison { background: #A542A5; border-color: #4A3A52;
-                box-shadow: 0 0 1.2px #4A3A52 inset; }
-a.type-ground { background: #E6C56B; border-color: #8C6B31;
-                box-shadow: 0 0 1.2px #8C6B31 inset; }
-a.type-flying { background: #AD94F7; border-color: #7A5A9C;
-                box-shadow: 0 0 1.2px #7A5A9C inset; }
-a.type-psychic { background: #FF5A8C; border-color: #946363;
-                 box-shadow: 0 0 1.2px #946363 inset; }
-a.type-bug { background: #ADBD21; border-color: #7B9410;
-             box-shadow: 0 0 1.2px #7B9410 inset; }
-a.type-rock { background: #BDA53A; border-color: #8C6B31;
-              box-shadow: 0 0 1.2px #8C6B31 inset; }
-a.type-ghost { background: #735A9C; border-color: #4A3A52;
-               box-shadow: 0 0 1.2px #4A3A52 inset; }
-a.type-dragon { background: #733AFF; border-color: #4A3A94;
-                box-shadow: 0 0 1.2px #4A3A94 inset; }
-a.type-dark { background: #735A4A; border-color: #4A423A;
-              box-shadow: 0 0 1.2px #4A423A inset; }
-a.type-steel { background: #BDBDD6; border-color: #847B73;
-               box-shadow: 0 0 1.2px #847B73 inset; }
-a.type-fairy { background: #FFA5E6; border-color: #B56B84;
-               box-shadow: 0 0 1.2px #B56B84 inset; }
-a.type-question { background: #6BA594; border-color: #216B63;
-                  box-shadow: 0 0 1.2px #216B63 inset; }
+a.type-normal   { background: #ADAD7B; --type-border: #735A4A; }
+a.type-fire     { background: #F75231; --type-border: #943129; }
+a.type-water    { background: #6B94F7; --type-border: #847B73; }
+a.type-grass    { background: #7BCE52; --type-border: #5A8442; }
+a.type-electric { background: #FFD631; --type-border: #BDA53A; }
+a.type-ice      { background: #9CDEDE; --type-border: #9494A5; }
+a.type-fighting { background: #943129; --type-border: #4A423A; }
+a.type-poison   { background: #A542A5; --type-border: #4A3A52; }
+a.type-ground   { background: #E6C56B; --type-border: #8C6B31; }
+a.type-flying   { background: #AD94F7; --type-border: #7A5A9C; }
+a.type-psychic  { background: #FF5A8C; --type-border: #946363; }
+a.type-bug      { background: #ADBD21; --type-border: #7B9410; }
+a.type-rock     { background: #BDA53A; --type-border: #8C6B31; }
+a.type-ghost    { background: #735A9C; --type-border: #4A3A52; }
+a.type-dragon   { background: #733AFF; --type-border: #4A3A94; }
+a.type-dark     { background: #735A4A; --type-border: #4A423A; }
+a.type-steel    { background: #BDBDD6; --type-border: #847B73; }
+a.type-fairy    { background: #FFA5E6; --type-border: #B56B84; }
+a.type-question { background: #6BA594; --type-border: #216B63; }
