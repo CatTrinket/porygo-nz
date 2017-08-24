@@ -19,13 +19,14 @@
     % endif
 % endfor
 
-<table>
+<table class="pokemon-table">
 <thead>
     <tr>
-        <th></th>
-        <th colspan="2">Pokémon</th>
-        <th>Type</th>
-        <th>Abilities</th>
+        <th class="pokemon-collapse-cell"></th>
+        <th class="pokemon-icon-cell"></th>
+        <th class="pokemon-cell">Pokémon</th>
+        <th class="type-list-cell">Type</th>
+        <th class="ability-list-cell">Abilities</th>
         <th class="stat-cell">HP</th>
         <th class="stat-cell">Atk</th>
         <th class="stat-cell">Def</th>
@@ -79,9 +80,9 @@
         </a>
     </td>
 
-    <td class="type-cell">${h.type_list(form.types)}</td>
+    <td class="type-list-cell">${h.type_list(form.types)}</td>
 
-    <td class="ability-cell">
+    <td class="ability-list-cell">
         <ul class="ability-list">
             <li><a>Ability 1</a></li>
             % if form.pokemon_id % 2 == 0:

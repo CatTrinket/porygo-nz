@@ -158,6 +158,8 @@ ul.ability-list {
 
 /* Tables */
 table {
+    table-layout: fixed;
+    width: 0;
     border-collapse: collapse;
     vertical-align: middle;
     white-space: nowrap;
@@ -182,19 +184,41 @@ td, th { padding: 0 0.5rem; }
 td:first-child, th:first-child { padding-left: 2rem; }
 td:last-child, th:last-child { padding-right: 2rem; }
 
-td.pokemon-collapse-cell { width: 1rem; padding-right: 0; }
-td.pokemon-collapse-cell:first-child { padding-left: 0.5rem; }
+*.pokemon-collapse-cell:first-child {
+    /* Always first column; should look like it's occupying the padding */
+    /* 0.5rem padding + 1rem width + 0.5rem next cell's padding = 2rem */
+    width: 1rem;
+    padding-left: 0.5rem;
+    padding-right: 0;
+}
 
-td.pokemon-icon-cell {
+*.pokemon-icon-cell {
+    width: 40px;
     padding-right: 0;
     padding-left: calc(0.5rem - 5px);  /* 0.5rem to the background circle */
 }
-td.pokemon-icon-cell + td { padding-left: 0; }
-td.pokemon-icon-cell:first-child { padding-left: calc(1.5rem - 5px); }
+*.pokemon-icon-cell + * { padding-left: 0; }
+*.pokemon-icon-cell:first-child { padding-left: calc(1.5rem - 5px); }
 
-td.ability-cell { height: 2.5rem; }
+*.pokemon-cell { width: 8rem; }
+*.pokemon-cell > a {
+    /* Display form name as a subtitle */
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+}
+
+*.type-cell { width: calc(4.5rem + 4px); }
+*.type-list-cell { width: calc((4.5rem + 4px) * 2); }
+
+*.ability-list-cell { width: 7rem; height: 2.5rem; }
+
 td.stat-cell { width: 3ch; text-align: right; }
-th.stat-cell { padding-left: 0; padding-right: 0; }
+th.stat-cell {
+    width: calc(3ch + 1rem);
+    padding-left: 0;
+    padding-right: 0;
+}
 th.stat-cell:last-child { padding-right: 1.5rem; }
 
 /* Pokémon table alt. form collapsing */
