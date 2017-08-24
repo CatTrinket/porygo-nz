@@ -135,7 +135,12 @@ h1 {
 }
 
 /* Images */
-img { vertical-align: middle; }
+img {
+    vertical-align: middle;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: pixelated;
+}
+
 img.pokemon-icon { background: url(/static/circle.svg) center no-repeat; }
 
 /* Misc. */
