@@ -93,6 +93,19 @@ class Index:
 
         return self.root_instance.generation_index or self.root_instance
 
+class PokemonIndex(Index):
+    __name__ = 'pokemon'
+    table = porydex.db.PokemonForm
+    # XXX Should redirect e.g. shaymin to shaymin-land
+
+class MoveIndex(Index):
+    __name__ = 'moves'
+    table = porydex.db.Move
+
+class AbilityIndex(Index):
+    __name__ = 'abilities'
+    table = porydex.db.Ability
+
 class TypeIndex(Index):
     __name__ = 'types'
     table = porydex.db.Type
@@ -122,6 +135,9 @@ def get_root(request):
     """Get a root resource."""
 
     root = Root(request)
+    root.add_index(PokemonIndex)
+    root.add_index(MoveIndex)
+    root.add_index(AbilityIndex)
     root.add_index(TypeIndex)
 
     return root
