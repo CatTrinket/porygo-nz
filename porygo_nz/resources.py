@@ -53,7 +53,17 @@ class GenerationIndex:
         self.generation = generation
 
     def __getitem__(self, key):
-        return self.__parent__.indices[key]
+        """Get an item from the root, but don't return it if it's specific to
+        later generations.
+        """
+
+        item = self.__parent__.indices[key]
+
+        if (item.min_generation_id is not None and
+                item.min_generation_id > self.generation.id):
+            raise KeyError
+
+        return item
 
 class Index:
     """A resource representing an index page for some table, e.g. all the
@@ -61,6 +71,9 @@ class Index:
 
     The table must have an identifier column to look up children.
     """
+
+    table = None
+    min_generation_id = None
 
     def __init__(self, root):
         self.root_instance = root
@@ -93,6 +106,20 @@ class Index:
 
         return self.root_instance.generation_index or self.root_instance
 
+class PokemonIndex(Index):
+    __name__ = 'pokemon'
+    table = porydex.db.PokemonForm
+    # XXX Should redirect e.g. shaymin to shaymin-land
+
+class MoveIndex(Index):
+    __name__ = 'moves'
+    table = porydex.db.Move
+
+class AbilityIndex(Index):
+    __name__ = 'abilities'
+    table = porydex.db.Ability
+    min_generation_id = 3
+
 class TypeIndex(Index):
     __name__ = 'types'
     table = porydex.db.Type
@@ -122,6 +149,9 @@ def get_root(request):
     """Get a root resource."""
 
     root = Root(request)
+    root.add_index(PokemonIndex)
+    root.add_index(MoveIndex)
+    root.add_index(AbilityIndex)
     root.add_index(TypeIndex)
 
     return root

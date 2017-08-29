@@ -70,7 +70,7 @@
     </td>
 
     <td class="pokemon-cell">
-        <a>
+        <a href="${req.resource_path(form.__parent__, form.__name__)}">
             ${form.pokemon.name}
             % if form.name:
                 <span class="pokemon-form-name expanded-only">

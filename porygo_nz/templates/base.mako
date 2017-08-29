@@ -18,11 +18,17 @@
             </a>
 
             <ul>
-                <li><a href="/">Pokémon</a></li>
-                <li><a href="/">Moves</a></li>
-                <li><a href="/">Abilities</a></li>
-                <li>${h.link(req.root['types'], 'Types')}</li>
-                <li><a href="/">Whatever</a></li>
+                <% root = req.root.generation_index or req.root %>
+                <li>${h.link(root['pokemon'], 'Pokémon')}</li>
+                <li>${h.link(root['moves'], 'Moves')}</li>
+
+                % try:
+                    <% abilities = root['abilities'] %>
+                    <li>${h.link(abilities, 'Abilities')}</li>
+                % except KeyError:
+                % endtry
+
+                <li>${h.link(root['types'], 'Types')}</li>
             </ul>
         </nav>
 
