@@ -1,8 +1,8 @@
 <%namespace name="h" file="helpers.mako" />
+<%! import itertools %>
 
 <%def name="pokemon_table(pokemon_forms)">
 <%
-    import itertools
     pokemon = itertools.groupby(pokemon_forms, lambda form: form.pokemon)
     pokemon = [(key, list(group)) for (key, group) in pokemon]
 %>
