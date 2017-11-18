@@ -325,5 +325,8 @@
 *.pokemon-collapse-mimikyu:checked ~ table > *.pokemon-mimikyu *.expanded-only { display: none; }
 *.pokemon-collapse-mimikyu:not(:checked) ~ table > *.pokemon-mimikyu *.collapsed-only { display: none; }
 
+*.pokemon-collapse-necrozma:checked ~ table > *.pokemon-necrozma *.expanded-only { display: none; }
+*.pokemon-collapse-necrozma:not(:checked) ~ table > *.pokemon-necrozma *.collapsed-only { display: none; }
+
 *.pokemon-collapse-magearna:checked ~ table > *.pokemon-magearna *.expanded-only { display: none; }
 *.pokemon-collapse-magearna:not(:checked) ~ table > *.pokemon-magearna *.collapsed-only { display: none; }
