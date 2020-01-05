@@ -29,11 +29,15 @@ class TypeView:
     def view(self):
         """A type's page."""
 
-        type = self.request.context
-        generation_id = None
+        return {'type': self.request.context, 'pokemon': self.pokemon()}
 
-        if self.request.root.generation_index is not None:
-            generation_id = self.request.root.generation_index.generation.id
-
-        return {'type': self.request.context,
-                'pokemon': type.pokemon[generation_id or max(type.pokemon)]}
+    def pokemon(self):
+        return (
+            self.request.session.query(porydex.db.PokemonForm)
+            .join(porydex.db.PokemonForm._current_gpf)
+            .filter(porydex.db.GenerationPokemonForm.types.any(
+                porydex.db.Type.id == self.request.context.id
+            ))
+            .order_by(porydex.db.PokemonForm.order)
+            .all()
+        )
