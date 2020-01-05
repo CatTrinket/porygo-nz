@@ -141,7 +141,15 @@ img {
     image-rendering: pixelated;
 }
 
-img.pokemon-icon { background: url(/static/circle.svg) center no-repeat; }
+img.pokemon-icon {
+    background: url(/static/circle.svg) center/36px no-repeat;
+    width: 68px;
+    height: 40px;
+    margin: 0 -14px;
+    object-fit: none;
+    object-position: center bottom;
+}
+img.pokemon-icon.tall { object-position: center; }
 
 /* Misc. */
 *.pokemon-form-name { font-size: 0.8rem; font-style: italic; }
@@ -181,22 +189,10 @@ tbody:nth-of-type(odd) > tr + tr { border-top: 1px solid #E8E8E8; }
 tbody:nth-of-type(even) > tr + tr { border-top: 1px solid #D8D8D8; }
 
 td, th { padding: 0 0.5rem; }
-td:first-child, th:first-child { padding-left: 2rem; }
-td:last-child, th:last-child { padding-right: 2rem; }
+td:first-child, th:first-child { padding-left: 1.5rem; }
+td:last-child, th:last-child { padding-right: 1.5rem; }
 
-*.pokemon-collapse-cell:first-child {
-    /* Always first column; should look like it's occupying the padding */
-    /* 0.5rem padding + 1rem width + 0.5rem next cell's padding = 2rem */
-    width: 1rem;
-    padding-left: 0.5rem;
-    padding-right: 0;
-}
-
-*.pokemon-icon-cell {
-    width: 40px;
-    padding-right: 0;
-    padding-left: calc(0.5rem - 5px);  /* 0.5rem to the background circle */
-}
+*.pokemon-icon-cell { width: 40px; }
 *.pokemon-icon-cell + * { padding-left: 0; }
 *.pokemon-icon-cell:first-child { padding-left: calc(1.5rem - 5px); }
 
@@ -219,21 +215,7 @@ th.stat-cell {
     padding-left: 0;
     padding-right: 0;
 }
-th.stat-cell:last-child { padding-right: 1.5rem; }
-
-/* Pokémon table alt. form collapsing */
-input.pokemon-collapse { display: none; }
-
-label.pokemon-collapse-label,
-label.pokemon-expand-label {
-    display: block;
-    height: 1rem;
-    width: 1rem;
-    cursor: pointer;
-}
-
-label.pokemon-collapse-label { background: url(/static/arrow-down.svg); }
-label.pokemon-expand-label { background: url(/static/arrow-right.svg); }
+th.stat-cell:last-child { padding-right: 1rem; }
 
 /* Type icons */
 a.type {

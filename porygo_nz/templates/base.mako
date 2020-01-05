@@ -6,7 +6,6 @@
 <head>
     <title><%block name="title">porygo.nz</%block></title>
     <link rel="stylesheet" href="/static/porygo-nz.css">
-    <link rel="stylesheet" href="/static/pokemon-collapse.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
