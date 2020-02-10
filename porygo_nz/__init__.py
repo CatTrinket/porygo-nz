@@ -21,9 +21,7 @@ def main(global_config, **settings):
     config.add_static_view('static', 'porygo_nz:static')
 
     config.add_request_method(
-        porygo_nz.resources.request_generation, name='generation', reify=True)
-    config.add_request_method(
-        porygo_nz.db.request_session, name='session', reify=True)
+        porygo_nz.db.request_session, name='db', reify=True)
 
     config.scan()
 

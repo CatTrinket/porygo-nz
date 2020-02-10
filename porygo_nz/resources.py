@@ -10,6 +10,8 @@ class Root:
     __name__ = None
     __parent__ = None
 
+    # This indicates *this* object's generation; it is None even if we have a
+    # generation index as a child
     generation = None
 
     def __init__(self, request):
@@ -21,6 +23,9 @@ class Root:
         """Return the corresponding Index or GenerationIndex."""
 
         if key in self.indices:
+            # XXX This could be called for reasons other than the initial
+            # traversal; generation should be determined some other way
+            self.request.generation = None
             return self.indices[key]
 
         try:
@@ -32,7 +37,9 @@ class Root:
         except sa.orm.exc.NoResultFound:
             raise KeyError
 
-        self.request.session.generation_id = generation.id
+        # XXX See previous "XXX" comment
+        self.request.generation = generation
+        # XXX Same thing
         self.generation_index = GenerationIndex(generation, self)
 
         return self.generation_index
@@ -134,16 +141,6 @@ def identifier_getattr(self, name):
         return self.identifier
     else:
         raise AttributeError
-
-def request_generation(request):
-    """Get the generation for a request.
-
-    This gets added as a request property in __init__.py.
-    """
-
-    index = request.root.generation_index or request.root
-
-    return index.generation
 
 def get_root(request):
     """Get a root resource."""
