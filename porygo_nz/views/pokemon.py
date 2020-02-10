@@ -18,7 +18,7 @@ class PokemonView:
         """The Pokémon index."""
 
         pokemon = (
-            self.request.session.query(porydex.db.PokemonForm)
+            self.request.db.query(porydex.db.PokemonForm)
                 .filter(porydex.db.PokemonForm.in_current_gen())
                 .order_by(porydex.db.PokemonForm.order)
                 .all()

@@ -91,7 +91,7 @@ class Index:
         """Look up the given key in the associated table."""
 
         query = (
-            self.root_instance.request.session.query(self.table)
+            self.root_instance.request.db.query(self.table)
             .filter_by(identifier=key)
         )
 

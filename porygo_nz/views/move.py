@@ -17,7 +17,7 @@ class MoveView:
         """The move index."""
 
         moves = (
-            self.request.session.query(porydex.db.Move)
+            self.request.db.query(porydex.db.Move)
                 .filter(porydex.db.Move.in_current_gen())
                 .order_by(porydex.db.Move.id)
                 .all()

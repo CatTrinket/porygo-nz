@@ -17,7 +17,7 @@ class TypeView:
         """The type index."""
 
         types = (
-            self.request.session.query(porydex.db.Type)
+            self.request.db.query(porydex.db.Type)
                 .filter(porydex.db.Type.in_current_gen())
                 .order_by(porydex.db.Type.id)
                 .all()
@@ -33,7 +33,7 @@ class TypeView:
 
     def pokemon(self):
         return (
-            self.request.session.query(porydex.db.PokemonForm)
+            self.request.db.query(porydex.db.PokemonForm)
             .join(porydex.db.PokemonForm._current_gpf)
             .filter(porydex.db.GenerationPokemonForm.types.any(
                 porydex.db.Type.id == self.request.context.id

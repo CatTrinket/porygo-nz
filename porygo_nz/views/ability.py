@@ -17,7 +17,7 @@ class AbilityView:
         """The ability index."""
 
         abilities = (
-            self.request.session.query(porydex.db.Ability)
+            self.request.db.query(porydex.db.Ability)
                 .filter(porydex.db.Ability.in_current_gen())
                 .order_by(porydex.db.Ability.id)
                 .all()
