@@ -151,6 +151,10 @@ h1 {
     line-height: 1;
 }
 
+h2 {
+    border-bottom: 2px solid var(--turquoise);
+}
+
 /* Images */
 img {
     vertical-align: middle;

@@ -28,7 +28,9 @@
         <th class="pokemon-icon-cell"></th>
         <th class="pokemon-cell">Pokémon</th>
         <th class="type-list-cell">Type</th>
-        <th class="ability-list-cell">Abilities</th>
+        % if req.generation is None or req.generation.id >= 3:
+            <th class="ability-list-cell">Abilities</th>
+        % endif
         <th class="stat-cell">HP</th>
         <th class="stat-cell">Atk</th>
         <th class="stat-cell">Def</th>
@@ -75,17 +77,21 @@
 
     <td class="type-list-cell">${h.type_list(form.types)}</td>
 
-    <td class="ability-list-cell">
-        <ul class="ability-list">
-            <li><a>Ability 1</a></li>
-            % if form.pokemon_id % 2 == 0:
-                <li><a>A Second Ability</a></li>
-            % endif
-            % if form.pokemon_id % 3 == 0:
-                <li class="hidden-ability"><a>Hidden Ability</a></li>
-            % endif
-        </ul>
-    </td>
+    % if req.generation is None or req.generation.id >= 3:
+        <td class="ability-list-cell">
+            <ul class="ability-list">
+                % for pokemon_ability in form.pokemon_abilities:
+                    <li
+                        % if pokemon_ability.slot is porydex.db.AbilitySlot.hidden_ability:
+                            class="hidden-ability"
+                        % endif
+                    >
+                        ${h.link(pokemon_ability.ability)}
+                    </li>
+                % endfor
+            </ul>
+        </td>
+    % endif
 
     % for n in range(6):
         <td class="stat-cell">123</td>
