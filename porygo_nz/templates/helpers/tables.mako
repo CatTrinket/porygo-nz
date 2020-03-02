@@ -31,6 +31,9 @@
         % if req.generation is None or req.generation.id >= 3:
             <th class="ability-list-cell">Abilities</th>
         % endif
+        % if req.generation is None or req.generation.id >= 5:
+            <th class="ability-list-cell">Hidden Ability</th>
+        % endif
         <th class="stat-cell">HP</th>
         <th class="stat-cell">Atk</th>
         <th class="stat-cell">Def</th>
@@ -78,23 +81,40 @@
     <td class="type-list-cell">${h.type_list(form.types)}</td>
 
     % if req.generation is None or req.generation.id >= 3:
-        <td class="ability-list-cell">
-            <ul class="ability-list">
-                % for pokemon_ability in form.pokemon_abilities:
-                    <li
-                        % if pokemon_ability.slot is porydex.db.AbilitySlot.hidden_ability:
-                            class="hidden-ability"
-                        % endif
-                    >
-                        ${h.link(pokemon_ability.ability)}
-                    </li>
-                % endfor
-            </ul>
-        </td>
+        ${ability_cell(form, hidden=False)}
+    % endif
+    % if req.generation is None or req.generation.id >= 5:
+        ${ability_cell(form, hidden=True)}
     % endif
 
     % for n in range(6):
         <td class="stat-cell">123</td>
     % endfor
 </tr>
+</%def>
+
+<%def name="ability_cell(pokemon_form, hidden)">
+    <%
+        hidden_slots = (
+            porydex.db.AbilitySlot.hidden_ability,
+            porydex.db.AbilitySlot.unique_ability
+        )
+    %>
+    <td class="ability-list-cell">
+        <ul class="ability-list">
+            % for pokemon_ability in pokemon_form.pokemon_abilities:
+                % if (pokemon_ability.slot in hidden_slots) == hidden:
+                    <li
+                        % if pokemon_ability.slot is porydex.db.AbilitySlot.hidden_ability:
+                            class="hidden-ability"
+                        % elif pokemon_ability.slot is porydex.db.AbilitySlot.unique_ability:
+                            class="unique-ability"
+                        % endif
+                    >
+                        ${h.link(pokemon_ability.ability)}
+                    </li>
+                % endif
+            % endfor
+        </ul>
+    </td>
 </%def>
