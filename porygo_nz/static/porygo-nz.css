@@ -234,7 +234,7 @@ td:last-child, th:last-child { padding-right: 1.5rem; }
 *.type-cell { width: calc(4.5rem + 4px); }
 *.type-list-cell { width: calc((4.5rem + 4px) * 2); }
 
-*.ability-list-cell { width: 7rem; height: 2.5rem; }
+*.ability-list-cell { width: 8.5rem; height: 2.5rem; }
 
 td.stat-cell { width: 3ch; text-align: right; }
 th.stat-cell {
