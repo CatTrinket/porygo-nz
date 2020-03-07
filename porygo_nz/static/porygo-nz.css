@@ -12,6 +12,7 @@
     --turquoise: #5094B8;
     --turquoise-border: #4884A5;
     --turquoise-hover: #68ACD0;
+    --turquoise-out-of-bounds: #244252;
 }
 
 
@@ -19,92 +20,180 @@
 
 html { font-size: 16px; }
 
+@media (min-width: 1921px) {
+    /* The letterbox colour for superwide monitors.  Only apply it when needed;
+       if something somehow overflows on a smaller size, we don't want it to
+       stick out onto the dark turquoise bg. */
+    html { background: var(--turquoise-out-of-bounds); }
+}
+
 body {
-    display: flex;
-    flex-direction: column;
     padding: 0;
-    margin: 0;
     background: var(--grey-bg);
     line-height: 1.4;
     font-family: Noto Sans, DejaVu Sans, Helvetica, Calibri, sans-serif;
+
+    /* Cap width for superwide monitors */
+    max-width: 1920px;
+    margin: auto;
 }
 
-/* Header */
+/* Desktop: nav on the left as a sidebar, page on the right; scroll the right
+   half while the sidebar stays fixed */
+@media (min-width: 1280px) {
+    header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 16rem;
+        height: 100vh;
+    }
+
+    div#page { margin-left: 16rem; }
+}
+
+/* Smaller screens: nav on top, then page */
+@media (max-width: 1279px) {
+    body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    div#page { flex: 1; }
+}
+
+
+/* Header (site title + main nav) */
+
 header {
     display: flex;
     flex-direction: column;
 }
 
-/* Main nav */
-nav {
-    display: flex;
-    align-items: baseline;
+@media (min-width: 768px) and (max-width: 1279px) {
+    /* Site title and nav on same row on medium screens only */
+    header {
+        flex-direction: row;
+        height: 4rem;
+    }
 }
 
-nav ul {
+
+/* Site title */
+
+a#site-title {
+    position: relative;
+    min-width: 16rem;
+    height: 4rem;
+    box-sizing: border-box;
+    text-align: right;
+    background: var(--turquoise-border);
+    color: var(--white);
+    font-size: 1.875rem;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+}
+
+a#site-title > img {
+    position: absolute;
+    bottom: -36px;
+    left: 0.5rem;
+    pointer-events: none;
+}
+
+@media (min-width: 768px) and (max-width: 1279px) {
+    a#site-title { background: var(--turquoise); }
+}
+
+
+/* Main nav */
+
+nav#main-nav {
     display: flex;
-    flex-wrap: wrap;
+    flex: 1;
+    background: var(--turquoise);
+    color: var(--white);
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+nav#main-nav > ul {
+    display: flex;
     list-style-type: none;
     margin: 0;
     padding: 0;
 }
 
-nav#main-nav {
-    background: var(--turquoise);
-    font-size: 1.5rem;
-    line-height: 1;
-    padding: 0 2rem;
-}
+nav#main-nav a { color: inherit; }
 
-nav#main-nav { z-index: 1; }
-nav#main-nav a { color: var(--white); }
-
-a#site-title {
-    font-size: 2rem;
-    font-weight: bold;
-    line-height: 0;
-    white-space: nowrap;
-}
-
-a#site-title > img {
-    display: inline-block;
-    vertical-align: middle;
-    margin-bottom: -36px;
-}
-
-nav#main-nav ul { padding: 0 1.5rem; }
-nav#main-nav li { padding: 0 0.5rem; }
-
-@media (max-width: 768px) {
-    nav#main-nav {
-        flex-direction: column;
-        align-items: stretch;
-        padding: 0;
-    }
-
-    a#site-title {
-        text-align: center;
+@media (min-width: 1280px) {
+    /* Vertical links in the sidebar */
+    nav#main-nav { flex-direction: column; }
+    nav#main-nav > ul { flex-direction: column; }
+    nav#main-nav > ul > li {
         border-bottom: 2px solid var(--turquoise-border);
     }
-
-    nav#main-nav ul {
-        justify-content: center;
-        margin-left: 0;
-        padding: 0.5rem;
+    nav#main-nav > ul > li > a {
+        display: block;
+        padding: 0.75rem 1.5rem;
+    }
+    nav#main-nav > ul > li > a:hover {
+        background: var(--turquoise-border);
     }
 }
 
-/* Subnav */
-nav#subnav {
+@media (max-width: 1279px) {
+    /* Inline list at the top of the page */
+    nav#main-nav {
+        flex-direction: row;
+    }
+    nav#main-nav > ul {
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+    nav#main-nav > ul > li {
+        margin-right: 0.5rem;
+        margin-left: 0.5rem;
+    }
+    nav#main-nav > ul > li > a:hover { text-decoration: underline; }
+}
+
+@media (max-width: 767px) {
+    nav#main-nav {
+        flex-direction: column;
+        padding: 0.5rem 0;
+    }
+    nav#main-nav > ul { justify-content: center; }
+}
+
+
+/* Page nav */
+
+nav#page-nav {
+    display: flex;
+    align-items: center;
+    height: 4rem;
+    box-sizing: border-box;
     background: var(--white);
     border-bottom: 2px solid var(--grey-border);
-    padding: 0.5rem 2rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
     line-height: 1.2;
 }
 
+@media (max-width: 767px) {
+    nav#page-nav { padding-right: 1rem; padding-left: 1rem; }
+}
+
 ul#breadcrumbs {
+    display: flex;
+    flex-wrap: wrap;
+    list-style-type: none;
     align-items: baseline;
-    margin-left: 100px;
+    margin: 0;
+    padding: 0;
 }
 
 ul#breadcrumbs > li:not(:last-child)::after {
@@ -113,18 +202,15 @@ ul#breadcrumbs > li:not(:last-child)::after {
 }
 
 ul#breadcrumbs > li:last-child {
-    font-size: 1.2em;
+    width: 100%;
+    font-size: 1.25rem;
     font-weight: bold;
 }
 
-@media (max-width: 768px) {
-    nav#subnav { padding: 0.5rem 1rem; }
-    ul#breadcrumbs { margin-left: 0; }
-}
 
 /* Main */
-main { padding: 1.5rem 2rem; }
 
+main { padding: 1.5rem 2rem; }
 main > *:first-child { margin-top: 0; }
 
 @media (max-width: 768px) {
@@ -174,7 +260,6 @@ img.pokemon-icon.tall { object-position: center; }
 
 /* Misc. */
 *.pokemon-form-name { font-size: 0.8rem; font-style: italic; }
-
 *.hidden-ability { font-style: italic; }
 
 ul.ability-list {

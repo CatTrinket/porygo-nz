@@ -11,11 +11,11 @@
 
 <body>
     <header>
-        <nav id="main-nav">
-            <a href="/" id="site-title">
-                <img src="/static/lambda.png" alt="">porygo.nz
-            </a>
+        <a href="/" id="site-title">
+            <img src="/static/lambda.png" alt="">porygo.nz
+        </a>
 
+        <nav id="main-nav">
             <ul>
                 <% root = req.root.generation_index or req.root %>
                 <li>${h.link(root['pokemon'], 'Pokémon')}</li>
@@ -30,18 +30,20 @@
                 <li>${h.link(root['types'], 'Types')}</li>
             </ul>
         </nav>
+    </header>
 
-        <nav id="subnav">
+    <div id="page">
+        <nav id="page-nav">
             <ul id="breadcrumbs">
                 <li><a href="/">Fake Breadcrumb</a></li>
                 <li><a href="/">Another</a></li>
                 <li><a href="/">Main Thing</a></li>
             </ul>
         </nav>
-    </header>
 
-    <main>
-        ${next.body()}
-    </main>
+        <main>
+            ${next.body()}
+        </main>
+    </div>
 </body>
 </html>
