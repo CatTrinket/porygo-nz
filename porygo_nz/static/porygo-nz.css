@@ -262,51 +262,33 @@ img.pokemon-icon.tall { object-position: center; }
 *.pokemon-form-name { font-size: 0.8rem; font-style: italic; }
 *.hidden-ability { font-style: italic; }
 
-ul.ability-list {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    font-size: 0.875rem;
-    line-height: 1;
-}
 
-/* Tables */
-table {
-    table-layout: fixed;
-    width: 0;
-    border-collapse: collapse;
-    vertical-align: middle;
-    white-space: nowrap;
-}
+/*** Tables ***/
 
+/* Border around all the tbodies as a whole */
 tbody { border: solid var(--grey-border); border-width: 0 2px; }
 tbody:first-of-type { border-top-width: 2px; }
 tbody:last-of-type { border-bottom-width: 2px; }
+
+/* Stripy rows */
 tbody:nth-of-type(odd) { background-color: var(--grey-stripe-light); }
 tbody:nth-of-type(even) { background-color: var(--grey-stripe-dark); }
 
-tbody + tbody {
-    /* 1px double looks the same as solid, but will take precedence over a tr's
-       solid border -- this is necessary if the first row in a tbody is hidden
-       (e.g. because of Pokémon form collapsing) */
-    border-top: 1px double var(--grey-stripe-dark-border);
-}
-
-tbody:nth-of-type(odd) > tr + tr {
-    border-top: 1px solid var(--grey-stripe-light-border);
-}
-
+tbody + tbody,
 tbody:nth-of-type(even) > tr + tr {
+    /* Darker border between two dark rows or one dark one light */
     border-top: 1px solid var(--grey-stripe-dark-border);
 }
 
+tbody:nth-of-type(odd) > tr + tr {
+    /* Lighter border between two light rows */
+    border-top: 1px solid var(--grey-stripe-light-border);
+}
+
 td, th { padding: 0 0.5rem; }
-td:first-child, th:first-child { padding-left: 1.5rem; }
-td:last-child, th:last-child { padding-right: 1.5rem; }
 
 *.pokemon-icon-cell { width: 40px; }
 *.pokemon-icon-cell + * { padding-left: 0; }
-*.pokemon-icon-cell:first-child { padding-left: calc(1.5rem - 5px); }
 
 *.pokemon-cell { width: 8rem; }
 *.pokemon-cell > a {
@@ -319,24 +301,140 @@ td:last-child, th:last-child { padding-right: 1.5rem; }
 *.type-cell { width: calc(4.5rem + 4px); }
 *.type-list-cell { width: calc((4.5rem + 4px) * 2); }
 
-*.ability-list-cell { width: 8.5rem; height: 2.5rem; }
+*.ability-list-cell { width: 8.5rem; }
+
+td.ability-list-cell > ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1;
+}
 
 td.stat-cell { width: 3ch; text-align: right; }
 th.stat-cell {
+    /* Let stat headers butt into the padding area; SpA and SpD in particular
+       are a little wider than 3ch */
     width: calc(3ch + 1rem);
     padding-left: 0;
     padding-right: 0;
 }
-th.stat-cell:last-child { padding-right: 1rem; }
 
-/* Type icons */
+@media (min-width: 1024px) {
+    /* Only display as an actual table on large enough screens */
+    table {
+        table-layout: fixed;
+        width: 0;
+        border-collapse: collapse;
+        vertical-align: middle;
+        white-space: nowrap;
+    }
+    td:first-child, th:first-child { padding-left: 1.5rem; }
+    td:last-child, th:last-child { padding-right: 1.5rem; }
+    *.pokemon-icon-cell:first-child { padding-left: calc(1.5rem - 2px); }
+    th.stat-cell:last-child { padding-right: 1rem; }
+}
+
+@media (max-width: 1023px) {
+    /* On screens too small for tables, dismantle the whole thing and arrange
+       cells manually */
+    table { width: auto; }
+    table, tbody {
+        display: flex;
+        flex-direction: column;
+    }
+    thead { display: none; }
+
+    tr {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        padding: 0 0.5rem 0.25rem;
+    }
+
+    /*
+        Pokemon           Type
+        Abilities
+        HP Atk Def SpA SpD Spe
+    */
+    /* XXX This is a bit sparse above 500px or so; would be nice to have a
+       middle layout */
+    td.pokemon-cell, td.stat-cell { flex: 1; }
+    td.pokemon-icon-cell { flex: 0; }
+    td.type-list-cell > ul.type-list { justify-content: flex-end; }
+    td.ability-list-cell { width: 100%; }
+
+    /* Display regular/hidden abilities as separate lines, e.g.:
+
+       Abilities: Adaptability, Download
+       Hidden ability: Analytic
+    */
+    td.ability-list-cell > ul { display: flex; font-size: 1rem; }
+    td.ability-list-cell > ul > li { display: flex; }
+
+    td.ability-list-regular > ul > li:not(:last-child)::after {
+        content: ',\A0';
+    }
+    td.ability-list-regular > ul::before {
+        content: 'Abilities:\A0';
+        font-weight: bold;
+    }
+
+    td.ability-list-hidden > ul {
+        /* Separate lines for hidden/unique */
+        flex-direction: column;
+    }
+    td.ability-list-hidden > ul > li.hidden-ability::before {
+        content: 'Hidden ability:\A0';
+        font-weight: bold;
+    }
+    td.ability-list-hidden > ul > li.unique-ability::before {
+        content: 'Unique ability:\A0';
+        font-weight: bold;
+    }
+
+    /* Label all the stats */
+    td.stat-cell {
+        display: flex;  /* To make the width on the ::before work */
+        flex: 1 0 auto;
+        text-align: left;
+    }
+
+    td.stat-cell::before {
+        font-weight: bold;
+
+        /* Make sure the colons line up vertically */
+        width: 2.5rem;
+        text-align: right;
+    }
+
+    td.stat-cell-hp::before { content: 'HP:\A0' }
+    td.stat-cell-atk::before { content: 'Atk:\A0' }
+    td.stat-cell-def::before { content: 'Def:\A0' }
+    td.stat-cell-spa::before { content: 'SpA:\A0' }
+    td.stat-cell-spd::before { content: 'SpD:\A0' }
+    td.stat-cell-spe::before { content: 'Spe:\A0' }
+}
+
+@media (max-width: 499px) {
+    /* Split the stats into two rows of three on small enough screens */
+    /* (< 500px is about where they stop fitting on one row) */
+    td.stat-cell {
+        width: calc(100%/3);
+        box-sizing: border-box;
+    }
+}
+
+
+/*** Type icons ***/
+
 a.type {
     display: inline-block;
     width: 4.5em;
 
     padding: 1px;
-    border: 1px solid var(--black);  /* Black as fallback */
-    border-color: var(--type-border);
+    border: 1px solid var(--type-border);
     border-radius: 5px;
     box-shadow: 0 0 1.2px var(--type-border) inset;
 

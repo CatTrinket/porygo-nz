@@ -87,9 +87,12 @@
         ${ability_cell(form, hidden=True)}
     % endif
 
-    % for n in range(6):
-        <td class="stat-cell">123</td>
-    % endfor
+    <td class="stat-cell stat-cell-hp">123</td>
+    <td class="stat-cell stat-cell-atk">123</td>
+    <td class="stat-cell stat-cell-def">123</td>
+    <td class="stat-cell stat-cell-spa">123</td>
+    <td class="stat-cell stat-cell-spd">123</td>
+    <td class="stat-cell stat-cell-spe">123</td>
 </tr>
 </%def>
 
@@ -99,9 +102,10 @@
             porydex.db.AbilitySlot.hidden_ability,
             porydex.db.AbilitySlot.unique_ability
         )
+        class_ = 'ability-list-hidden' if hidden else 'ability-list-regular'
     %>
-    <td class="ability-list-cell">
-        <ul class="ability-list">
+    <td class="ability-list-cell ${class_}">
+        <ul>
             % for pokemon_ability in pokemon_form.pokemon_abilities:
                 % if (pokemon_ability.slot in hidden_slots) == hidden:
                     <li
