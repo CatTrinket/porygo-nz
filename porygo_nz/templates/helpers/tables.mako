@@ -28,22 +28,24 @@
         <th class="pokemon-icon-cell"></th>
         <th class="pokemon-cell">Pokémon</th>
         <th class="type-list-cell">Type</th>
+
         % if req.generation is None or req.generation.id >= 3:
             <th class="ability-list-cell">Abilities</th>
         % endif
         % if req.generation is None or req.generation.id >= 5:
-            <th class="ability-list-cell">Hidden Ability</th>
+            <th class="ability-list-cell">Hidden ability</th>
         % endif
-        <th class="stat-cell">HP</th>
-        <th class="stat-cell">Atk</th>
-        <th class="stat-cell">Def</th>
+
+        <th class="stat-cell"><abbr title="Hit Points">HP</abbr></th>
+        <th class="stat-cell"><abbr title="Attack">Atk</abbr></th>
+        <th class="stat-cell"><abbr title="Defense">Def</abbr></th>
         % if req.generation is None or req.generation.id >= 3:
-            <th class="stat-cell">SpA</th>
-            <th class="stat-cell">SpD</th>
+            <th class="stat-cell"><abbr title="Special Attack">SpA</abbr></th>
+            <th class="stat-cell"><abbr title="Special Defense">SpD</abbr></th>
         % endif
-        <th class="stat-cell">Spe</th>
+        <th class="stat-cell"><abbr title="Speed">Spe</abbr></th>
         % if req.generation is not None and req.generation.id == 1:
-            <th class="stat-cell">Spc</th>
+            <th class="stat-cell"><abbr title="Special">Spc</abbr></th>
         % endif
     </tr>
 </thead>
