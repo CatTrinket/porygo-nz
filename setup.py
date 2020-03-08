@@ -7,6 +7,7 @@ requires = [
     'pyramid >=1.7.3, <1.8',
     'pyramid_debugtoolbar >=3.0.5, <3.1',
     'pyramid_mako >=1.0.2, <1.1',
+    'waitress==1.4.3'
 ]
 
 setuptools.setup(
