@@ -37,9 +37,14 @@
         <th class="stat-cell">HP</th>
         <th class="stat-cell">Atk</th>
         <th class="stat-cell">Def</th>
-        <th class="stat-cell">SpA</th>
-        <th class="stat-cell">SpD</th>
+        % if req.generation is None or req.generation.id >= 3:
+            <th class="stat-cell">SpA</th>
+            <th class="stat-cell">SpD</th>
+        % endif
         <th class="stat-cell">Spe</th>
+        % if req.generation is not None and req.generation.id == 1:
+            <th class="stat-cell">Spc</th>
+        % endif
     </tr>
 </thead>
 
@@ -87,12 +92,11 @@
         ${ability_cell(form, hidden=True)}
     % endif
 
-    <td class="stat-cell stat-cell-hp">123</td>
-    <td class="stat-cell stat-cell-atk">123</td>
-    <td class="stat-cell stat-cell-def">123</td>
-    <td class="stat-cell stat-cell-spa">123</td>
-    <td class="stat-cell stat-cell-spd">123</td>
-    <td class="stat-cell stat-cell-spe">123</td>
+    % for stat in form.stats:
+        <td class="stat-cell stat-cell-${stat.stat.identifier}">
+            ${stat.base_stat}
+        </td>
+    % endfor
 </tr>
 </%def>
 

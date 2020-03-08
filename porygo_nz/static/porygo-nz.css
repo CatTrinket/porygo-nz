@@ -401,20 +401,15 @@ th.stat-cell {
         text-align: left;
     }
 
-    td.stat-cell::before {
-        font-weight: bold;
 
-        /* Make sure the colons line up vertically */
-        width: 2.5rem;
-        text-align: right;
-    }
-
+    td.stat-cell::before { font-weight: bold; }
     td.stat-cell-hp::before { content: 'HP:\A0' }
-    td.stat-cell-atk::before { content: 'Atk:\A0' }
-    td.stat-cell-def::before { content: 'Def:\A0' }
-    td.stat-cell-spa::before { content: 'SpA:\A0' }
-    td.stat-cell-spd::before { content: 'SpD:\A0' }
-    td.stat-cell-spe::before { content: 'Spe:\A0' }
+    td.stat-cell-attack::before { content: 'Atk:\A0' }
+    td.stat-cell-defense::before { content: 'Def:\A0' }
+    td.stat-cell-special-attack::before { content: 'SpA:\A0' }
+    td.stat-cell-special-defense::before { content: 'SpD:\A0' }
+    td.stat-cell-speed::before { content: 'Spe:\A0' }
+    td.stat-cell-special::before { content: 'Spc:\A0' }
 }
 
 @media (max-width: 499px) {
@@ -423,6 +418,12 @@ th.stat-cell {
     td.stat-cell {
         width: calc(100%/3);
         box-sizing: border-box;
+    }
+
+    td.stat-cell::before {
+        /* Make sure the colons line up vertically */
+        width: 2.5rem;
+        text-align: right;
     }
 }
 
