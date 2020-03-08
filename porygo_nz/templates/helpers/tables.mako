@@ -39,7 +39,7 @@
         <th class="stat-cell"><abbr title="Hit Points">HP</abbr></th>
         <th class="stat-cell"><abbr title="Attack">Atk</abbr></th>
         <th class="stat-cell"><abbr title="Defense">Def</abbr></th>
-        % if req.generation is None or req.generation.id >= 3:
+        % if req.generation is None or req.generation.id >= 2:
             <th class="stat-cell"><abbr title="Special Attack">SpA</abbr></th>
             <th class="stat-cell"><abbr title="Special Defense">SpD</abbr></th>
         % endif
