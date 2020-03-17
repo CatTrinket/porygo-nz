@@ -49,7 +49,16 @@ body {
         height: 100vh;
     }
 
-    div#page { margin-left: 16rem; }
+    div#page {
+        margin-left: 16rem;
+        min-height: 100vh;
+    }
+}
+
+@media (min-width: 1921px) {
+    /* Keep the header in the right place when we're wide enough to letterbox
+    */
+    header { left: calc(50% - 960px); }
 }
 
 /* Smaller screens: nav on top, then page */
