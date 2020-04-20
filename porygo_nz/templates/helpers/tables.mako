@@ -29,10 +29,10 @@
         <th class="pokemon-cell">Pokémon</th>
         <th class="type-list-cell">Type</th>
 
-        % if req.generation is None or req.generation.id >= 3:
+        % if req.show_abilities:
             <th class="ability-list-cell">Abilities</th>
         % endif
-        % if req.generation is None or req.generation.id >= 5:
+        % if req.show_hidden_abilities:
             <th class="ability-list-cell">Hidden ability</th>
         % endif
 
@@ -87,10 +87,10 @@
 
     <td class="type-list-cell">${h.type_list(form.types)}</td>
 
-    % if req.generation is None or req.generation.id >= 3:
+    % if req.show_abilities:
         ${ability_cell(form, hidden=False)}
     % endif
-    % if req.generation is None or req.generation.id >= 5:
+    % if req.show_hidden_abilities:
         ${ability_cell(form, hidden=True)}
     % endif
 

@@ -2,6 +2,7 @@ import pyramid.config
 import sqlalchemy
 
 import porygo_nz.db
+import porygo_nz.request_methods
 import porygo_nz.resources
 
 
@@ -22,6 +23,10 @@ def main(global_config, **settings):
 
     config.add_request_method(
         porygo_nz.db.request_session, name='db', reify=True)
+    config.add_request_method(
+        porygo_nz.request_methods.show_abilities, reify=True)
+    config.add_request_method(
+        porygo_nz.request_methods.show_hidden_abilities, reify=True)
 
     config.scan()
 

@@ -66,8 +66,7 @@ class GenerationIndex:
 
         item = self.__parent__.indices[key]
 
-        if (item.min_generation_id is not None and
-                item.min_generation_id > self.generation.id):
+        if not item.show_for_current_request():
             raise KeyError
 
         return item
@@ -80,7 +79,6 @@ class Index:
     """
 
     table = None
-    min_generation_id = None
 
     def __init__(self, root):
         self.root_instance = root
@@ -113,6 +111,12 @@ class Index:
 
         return self.root_instance.generation_index or self.root_instance
 
+    def show_for_current_request(self):
+        """Return whether this index should be shown for the current request.
+        """
+
+        return True
+
 class PokemonIndex(Index):
     __name__ = 'pokemon'
     table = porydex.db.PokemonForm
@@ -125,7 +129,9 @@ class MoveIndex(Index):
 class AbilityIndex(Index):
     __name__ = 'abilities'
     table = porydex.db.Ability
-    min_generation_id = 3
+
+    def show_for_current_request(self):
+        return self.root_instance.request.show_abilities
 
 class TypeIndex(Index):
     __name__ = 'types'
