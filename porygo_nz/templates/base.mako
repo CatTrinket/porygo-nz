@@ -12,7 +12,7 @@
 <body>
     <header>
         <a href="/" id="site-title">
-            <img src="/static/lambda.png" alt="">porygo.nz
+            <img src="/static/lambda.png" alt="" class="sprite">porygo.nz
         </a>
 
         <nav id="main-nav">

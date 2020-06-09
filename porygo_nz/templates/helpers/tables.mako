@@ -64,11 +64,9 @@
 <tr>
     <td class="pokemon-icon-cell">
         <%
-            icon_class = (
-                'pokemon-icon tall'
-                if form.identifier in tall_pokemon
-                else 'pokemon-icon'
-            )
+            icon_class = 'pokemon-icon sprite'
+            if form.identifier in tall_pokemon:
+                icon_class += ' tall'
         %>\
         <img src="/static/pokemon-icons/${form.identifier}.png"
              class="${icon_class}" alt="">

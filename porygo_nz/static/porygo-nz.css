@@ -12,6 +12,8 @@
     --turquoise: #5094B8;
     --turquoise-border: #4884A5;
     --turquoise-hover: #68ACD0;
+    --turquoise-light: #CFDDE4;
+    --turquoise-light-border: #B0CBDA;
     --turquoise-out-of-bounds: #244252;
 }
 
@@ -251,8 +253,9 @@ h2 {
 }
 
 /* Images */
-img {
-    vertical-align: middle;
+img { vertical-align: middle; }
+
+img.sprite {
     image-rendering: -moz-crisp-edges;
     image-rendering: pixelated;
 }
@@ -270,6 +273,67 @@ img.pokemon-icon.tall { object-position: center; }
 /* Misc. */
 *.pokemon-form-name { font-size: 0.8rem; font-style: italic; }
 *.hidden-ability { font-style: italic; }
+*.data-pending {
+    color: #AAAAAA;
+    font-style: italic;
+}
+
+/* dls with dts on the left and dds on the right */
+dl {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    align-items: baseline;
+    grid-row-gap: 0.5rem;
+    margin: 0;
+}
+
+dt {
+    grid-column-start: 1;
+    background: var(--turquoise-light);
+    border: solid var(--turquoise-light-border);
+    border-radius: 0.5rem 0 0 0.5rem;
+    border-width: 1px 0 1px 1px;
+    padding: 0.125rem 0.5rem;
+    font-weight: bold;
+    text-align: right;
+}
+
+dd {
+    grid-column-start: 2;
+    background: var(--grey-stripe-light);
+    border: 1px solid var(--grey-border);
+    margin: 0;
+    padding: 0.125rem 0.5rem;
+}
+
+dd + dd {
+    margin-top: -0.5rem;  /* Cancel out the grid gap */
+    border-top: none;
+}
+
+dd > dl {
+    /* Sub-dl for further breakdown */
+    margin: -0.125rem -0.5rem;  /* Cancel out outer dd's padding */
+    grid-row-gap: 0;
+}
+
+dd > dl > dt { text-align: left; }
+
+dd > dl > dt,
+dd > dl > dd {
+    margin-top: 0;
+    border: none;
+}
+
+dd > dl > dt:not(:first-of-type),
+dd > dl > dd:not(:first-of-type) {
+    border-top: 1px solid var(--grey-border);
+}
+
+dd > dl > dt {
+    background: var(--grey-stripe-dark);
+    border-radius:0;
+}
 
 
 /*** Tables ***/
@@ -481,3 +545,37 @@ a.type-dark     { background: #735A4A; --type-border: #4A423A; }
 a.type-steel    { background: #BDBDD6; --type-border: #847B73; }
 a.type-fairy    { background: #FFA5E6; --type-border: #B56B84; }
 a.type-question { background: #6BA594; --type-border: #216B63; }
+
+
+/*** Pokémon page ***/
+
+div#pokemon-basics {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: max-content 1fr 37.5% 25%;
+    grid-template-rows: max-content 1fr;
+    grid-template-areas:
+        "portrait stats    stats     misc"
+        "matchups matchups abilities misc";
+}
+
+div#pokemon-portrait { grid-area: portrait; }
+div#pokemon-misc { grid-area: misc; }
+div#pokemon-stats { grid-area: stats; }
+div#pokemon-matchups { grid-area: matchups; }
+div#pokemon-abilities { grid-area: abilities; }
+
+div#pokemon-basics > * > h2 { margin-top: 0; }
+
+div#pokemon-portrait {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+}
+
+div#pokemon-portrait > img {
+    max-width: 10rem;
+    background: url(/static/circle.svg) center/100% no-repeat;
+}
