@@ -579,3 +579,44 @@ div#pokemon-portrait > img {
     max-width: 10rem;
     background: url(/static/circle.svg) center/100% no-repeat;
 }
+
+dd.pokemon-stat-bar {
+    /* --pokemon-stat is set on the element itself in the style attribute */
+    --pokemon-stat-percent: calc(100% * var(--pokemon-stat) / 255);
+    background: linear-gradient(
+        to right,
+        var(--turquoise) 0,
+        var(--turquoise) var(--pokemon-stat-percent),
+        var(--grey-stripe-light) var(--pokemon-stat-percent)
+    );
+}
+
+svg.pokemon-stat-number {
+    /*
+        We do some pretty specific positioning here:
+
+        1. The SVG has 4px extra space on all sides so the text strokes don't
+        get cut off, hence the -4px margin.
+
+        2. The text should be 3ch wide and right-aligned, but SVG doesn't seem
+        to accept different units when positioning text.  Instead, the right of
+        the text is at 40px, and then we negate that 40px and add 3ch here.
+    */
+    position: relative;
+    margin: -4px;
+    left: calc(-40px + 3ch);
+
+    /*
+        Keep white number on white bg visible when the bar is too skinny.
+
+        Chrome only supports paint-order on SVG text, not HTML text, which is
+        why we're using an inline SVG in the first place.
+    */
+    font-weight: bold;
+    fill: white;
+    stroke: var(--turquoise);
+    stroke-width: 0.375rem;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    paint-order: stroke fill;
+}

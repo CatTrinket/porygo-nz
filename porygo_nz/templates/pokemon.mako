@@ -95,9 +95,23 @@
     <div id="pokemon-stats">
         <h2>Stats</h2>
         <dl>
+            <!-- We use SVGs here b/c Chrome doesn't support paint-order on
+            HTML text; see comments in the CSS -->
             % for stat in pokemon.stats:
                 <dt>${stat.stat.name}</dt>
-                <dd>${stat.base_stat}</dd>
+                <dd
+                    class="pokemon-stat-bar"
+                    style="--pokemon-stat: ${stat.base_stat};"
+                >
+                    <svg
+                        width="48" height="24" viewBox="-4 -4 48 24"
+                        class="pokemon-stat-number"
+                    >
+                        <text x="40" y="16" text-anchor="end">
+                            ${stat.base_stat}
+                        </text>
+                    </svg>
+                </dd>
             % endfor
         </dl>
     </div>
@@ -146,9 +160,6 @@
             </dl>
         </div>
     % endif
-</div>
-
-<div class="columns">
 </div>
 
 
