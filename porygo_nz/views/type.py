@@ -1,4 +1,5 @@
-from pyramid.view import view_config
+import pyramid.decorator
+import pyramid.view
 
 import porydex.db
 import porygo_nz.db
@@ -11,26 +12,30 @@ class TypeView:
     def __init__(self, request):
         self.request = request
 
-    @view_config(context=porygo_nz.resources.TypeIndex,
-                 renderer='/type_index.mako')
+    @pyramid.view.view_config(
+        context=porygo_nz.resources.TypeIndex, renderer='/type_index.mako')
     def index(self):
         """The type index."""
 
         types = (
             self.request.db.query(porydex.db.Type)
-                .filter(porydex.db.Type.in_current_gen())
-                .order_by(porydex.db.Type.id)
-                .all()
+            .filter(porydex.db.Type.in_current_gen())
+            .order_by(porydex.db.Type.id)
+            .all()
         )
 
         return {'types': types}
 
-    @view_config(context=porydex.db.Type, renderer='/type.mako')
+    @pyramid.view.view_config(context=porydex.db.Type, renderer='/type.mako')
     def view(self):
         """A type's page."""
 
-        return {'type': self.request.context, 'pokemon': self.pokemon()}
+        return {
+            'type': self.request.context,
+            'pokemon': self.pokemon
+        }
 
+    @pyramid.decorator.reify
     def pokemon(self):
         return (
             self.request.db.query(porydex.db.PokemonForm)

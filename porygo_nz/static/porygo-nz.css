@@ -5,6 +5,7 @@
     --white: #FFFFFF;
     --grey-bg: #F0F0F0;
     --grey-border: #CCCCCC;
+    --grey-medium: #808080;
     --grey-stripe-light: #F8F8F8;
     --grey-stripe-dark: #E8E8E8;
     --grey-stripe-light-border: #E8E8E8;
@@ -249,6 +250,7 @@ h1 {
 }
 
 h2 {
+    margin-top: 0;
     border-bottom: 2px solid var(--turquoise);
 }
 
@@ -270,11 +272,11 @@ img.pokemon-icon {
 }
 img.pokemon-icon.tall { object-position: center; }
 
-/* Misc. */
+/* Misc. general-use classes */
 *.pokemon-form-name { font-size: 0.8rem; font-style: italic; }
 *.hidden-ability { font-style: italic; }
-*.data-pending {
-    color: #AAAAAA;
+*.data-pending, *.not-applicable {
+    color: var(--grey-medium);
     font-style: italic;
 }
 
@@ -317,7 +319,10 @@ dd > dl {
     grid-row-gap: 0;
 }
 
-dd > dl > dt { text-align: left; }
+dd > dl > dt {
+    align-self: stretch;
+    text-align: left;
+}
 
 dd > dl > dt,
 dd > dl > dd {
@@ -334,6 +339,33 @@ dd > dl > dt {
     background: var(--grey-stripe-dark);
     border-radius:0;
 }
+
+@supports (grid-template-columns: subgrid) {
+    /*
+        If *every* <dd> is going to be broken down further, we can use this to make
+        the second-level <dt>s line up.
+
+        Only Firefox supports subgrid at the time of writing, so individual
+        two-tier <dl>s will have to have widths set for the second-level <dt>s as
+        fallback.
+    */
+    dl.two-tier {
+        grid-template-columns: max-content max-content 1fr;
+    }
+
+    dl.two-tier > dd {
+        display: grid;
+        grid-column: 2 / span 2;
+        grid-template-columns: subgrid;
+    }
+
+    dl.two-tier > dd > dl {
+        grid-template-columns: subgrid;
+        grid-column: 1 / span 2;
+    }
+}
+
+dl.two-tier > dd > dl > dt { text-align: right; }
 
 
 /*** Tables ***/
@@ -547,6 +579,21 @@ a.type-fairy    { background: #FFA5E6; --type-border: #B56B84; }
 a.type-question { background: #6BA594; --type-border: #216B63; }
 
 
+/*** Misc. shared page parts ***/
+dl.type-matchups > dd > dl > dd:not(.not-applicable) {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+dl.type-matchups > dd > dl > dd > ul.type-list {
+    flex-wrap: wrap;
+}
+
+@supports not (grid-template-columns: subgrid) {
+    dl.type-matchups > dd > dl > dt { min-width: 1.5rem; }
+}
+
+
 /*** Pokémon page ***/
 
 div#pokemon-basics {
@@ -564,8 +611,6 @@ div#pokemon-misc { grid-area: misc; }
 div#pokemon-stats { grid-area: stats; }
 div#pokemon-matchups { grid-area: matchups; }
 div#pokemon-abilities { grid-area: abilities; }
-
-div#pokemon-basics > * > h2 { margin-top: 0; }
 
 div#pokemon-portrait {
     display: flex;
@@ -620,3 +665,14 @@ svg.pokemon-stat-number {
     stroke-linejoin: round;
     paint-order: stroke fill;
 }
+
+
+/*** Type page ***/
+
+div#type-basics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+div#type-basics > * { flex: 1; }

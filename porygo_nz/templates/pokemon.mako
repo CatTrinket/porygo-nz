@@ -6,6 +6,7 @@
 
 <%inherit file="base.mako" />
 <%namespace name="h" file="helpers/helpers.mako" />
+<%namespace name="type_matchups" file="helpers/type_matchups.mako" />
 
 <%block name="title">${pokemon.full_name} - Pokémon - porygo.nz</%block>
 
@@ -118,22 +119,7 @@
 
     <div id="pokemon-matchups">
         <h2>Type matchups</h2>
-        <dl>
-            <dt>Very weak to (4×)</dt>
-            <dd class="data-pending">[data pending]</dd>
-
-            <dt>Weak to (2×)</dt>
-            <dd class="data-pending">[data pending]</dd>
-
-            <dt>Resistant to (½×)</dt>
-            <dd class="data-pending">[data pending]</dd>
-
-            <dt>Very resistant to (¼×)</dt>
-            <dd class="data-pending">[data pending]</dd>
-
-            <dt>Immune to (0×)</dt>
-            <dd class="data-pending">[data pending]</dd>
-        </dl>
+        ${type_matchups.body(pokemon.types, defending=True)}
     </div>
 
     % if pokemon.pokemon_abilities:
