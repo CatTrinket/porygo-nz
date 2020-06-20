@@ -1,9 +1,12 @@
 <%inherit file="base.mako" />
+<%namespace name="h" file="helpers/helpers.mako" />
 <%namespace name="t" file="helpers/tables.mako" />
 
 <%block name="title">${ability.name} - Abilities - porygo.nz</%block>
-
-<h1>${ability.name}</h1>
+<%block name="breadcrumbs">
+    <li>${h.link(ability.__parent__, 'Abilities')}</li>
+    <li>${ability.name}</li>
+</%block>
 
 <h1>Pokémon</h1>
 

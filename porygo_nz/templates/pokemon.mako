@@ -10,6 +10,16 @@
 
 <%block name="title">${pokemon.full_name} - Pokémon - porygo.nz</%block>
 
+<%block name="breadcrumbs">
+    <li>${h.link(pokemon.__parent__, text='Pokémon')}</li>
+    <li>
+        ${pokemon.pokemon.name}
+        % if pokemon.name:
+            <span class="pokemon-form-name">(${pokemon.name})</span>
+        % endif
+    </li>
+</%block>
+
 <div id="pokemon-basics">
     <div id="pokemon-portrait">
         <img src="/static/pokemon/${pokemon.identifier}.png" alt="">

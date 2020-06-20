@@ -1,7 +1,13 @@
 <%inherit file="base.mako" />
+<%namespace name="h" file="helpers/helpers.mako" />
 <%namespace name="t" file="helpers/tables.mako" />
 <%namespace name="type_matchups" file="helpers/type_matchups.mako" />
+
 <%block name="title">${type.name} - Types - porygo.nz</%block>
+<%block name="breadcrumbs">
+    <li>${h.link(type.__parent__, 'Types')}</li>
+    <li>${type.name}</li>
+</%block>
 
 <div id="type-basics">
     <div>

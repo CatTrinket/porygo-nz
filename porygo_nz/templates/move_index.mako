@@ -2,6 +2,7 @@
 <%namespace name="h" file="helpers/helpers.mako" />
 
 <%block name="title">Moves - porygo.nz</%block>
+<%block name="breadcrumbs"><li>Moves</li></%block>
 
 <ul>
     % for move in moves:

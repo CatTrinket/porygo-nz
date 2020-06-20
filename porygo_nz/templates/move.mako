@@ -2,5 +2,7 @@
 <%namespace name="h" file="helpers/helpers.mako" />
 
 <%block name="title">${move.name} - Moves - porygo.nz</%block>
-
-<h1>${move.name}</h1>
+<%block name="breadcrumbs">
+    <li>${h.link(move.__parent__, 'Moves')}</li>
+    <li>${move.name}</li>
+</%block>

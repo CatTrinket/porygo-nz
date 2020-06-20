@@ -35,9 +35,15 @@
     <div id="page">
         <nav id="page-nav">
             <ul id="breadcrumbs">
-                <li><a href="/">Fake Breadcrumb</a></li>
-                <li><a href="/">Another</a></li>
-                <li><a href="/">Main Thing</a></li>
+                % if req.generation is not None:
+                    <li>${h.link(
+                        req.root.generation_index,
+                        text=req.generation.name
+                    )}</li>
+                % endif
+                <%block name="breadcrumbs">
+                    <li>[breadcrumbs undefined]</li>
+                </%block>
             </ul>
         </nav>
 

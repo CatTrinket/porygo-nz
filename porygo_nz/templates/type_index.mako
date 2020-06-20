@@ -2,6 +2,7 @@
 <%namespace name="h" file="helpers/helpers.mako" />
 
 <%block name="title">Types - porygo.nz</%block>
+<%block name="breadcrumbs"><li>Types</li></%block>
 
 <ul>
     % for type in types:

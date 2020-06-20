@@ -36,6 +36,8 @@ body {
     line-height: 1.4;
     font-family: Noto Sans, DejaVu Sans, Helvetica, Calibri, sans-serif;
 
+    --top-bar-height: 4.5rem;
+
     /* Cap width for superwide monitors */
     max-width: 1920px;
     margin: auto;
@@ -87,7 +89,7 @@ header {
     /* Site title and nav on same row on medium screens only */
     header {
         flex-direction: row;
-        height: 4rem;
+        height: var(--top-bar-height);
     }
 }
 
@@ -97,14 +99,14 @@ header {
 a#site-title {
     position: relative;
     min-width: 16rem;
-    height: 4rem;
+    height: var(--top-bar-height);
     box-sizing: border-box;
     text-align: right;
     background: var(--turquoise-border);
     color: var(--white);
     font-size: 1.875rem;
     font-weight: bold;
-    padding: 0.5rem 1rem;
+    padding: 0.75rem 1rem;
 }
 
 a#site-title > img {
@@ -186,7 +188,7 @@ nav#main-nav a { color: inherit; }
 nav#page-nav {
     display: flex;
     align-items: center;
-    height: 4rem;
+    height: var(--top-bar-height);
     box-sizing: border-box;
     background: var(--white);
     border-bottom: 2px solid var(--grey-border);
@@ -204,6 +206,7 @@ ul#breadcrumbs {
     flex-wrap: wrap;
     list-style-type: none;
     align-items: baseline;
+    line-height: 1.125;
     margin: 0;
     padding: 0;
 }
@@ -215,14 +218,14 @@ ul#breadcrumbs > li:not(:last-child)::after {
 
 ul#breadcrumbs > li:last-child {
     width: 100%;
-    font-size: 1.25rem;
+    font-size: 1.875rem;
     font-weight: bold;
 }
 
 
 /* Main */
 
-main { padding: 1.5rem 2rem; }
+main { padding: 1rem 2rem; }
 main > *:first-child { margin-top: 0; }
 
 @media (max-width: 768px) {
@@ -273,7 +276,7 @@ img.pokemon-icon {
 img.pokemon-icon.tall { object-position: center; }
 
 /* Misc. general-use classes */
-*.pokemon-form-name { font-size: 0.8rem; font-style: italic; }
+*.pokemon-form-name { font-size: 0.8em; font-style: italic; }
 *.hidden-ability { font-style: italic; }
 *.data-pending, *.not-applicable {
     color: var(--grey-medium);
@@ -595,6 +598,16 @@ dl.type-matchups > dd > dl > dd > ul.type-list {
 
 
 /*** Pokémon page ***/
+
+ul#breadcrumbs span.pokemon-form-name {
+    font-weight: normal;
+
+    /* Undo the usual *.pokemon-form-name stuff */
+    /* XXX If it turns out some other page also needs an unbolded subtitle it
+       would be very nice to just have a class for that */
+    font-style: normal;
+    font-size: inherit;
+}
 
 div#pokemon-basics {
     display: grid;
