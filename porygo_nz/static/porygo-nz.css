@@ -634,7 +634,8 @@ div#pokemon-portrait {
 }
 
 div#pokemon-portrait > img {
-    max-width: 10rem;
+    width: 10rem;
+    height: 10rem;
     background: url(/static/circle.svg) center/100% no-repeat;
 }
 
