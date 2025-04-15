@@ -18,8 +18,8 @@
 
 
     def type_chart_id(request):
-        if request.generation is not None:
-            return request.generation.type_chart_id
+        if request.context.game is not None:
+            return request.context.game.type_chart_id
         else:
             return (
                 request.db.query(sa.func.max(porydex.db.TypeChart.id))
@@ -41,6 +41,13 @@
                     porydex.db.TypeMatchup.type_chart_id
                         == type_chart_id(request),
                     type_col == type_.id
+                )
+                .options(
+                    sa.orm.joinedload(
+                        porydex.db.TypeMatchup.attacking_type
+                        if defending
+                        else porydex.db.TypeMatchup.defending_type
+                    ).selectinload(porydex.db.Type._names)
                 )
                 .all()
             )

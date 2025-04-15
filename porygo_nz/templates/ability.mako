@@ -4,7 +4,7 @@
 
 <%block name="title">${ability.name} - Abilities - porygo.nz</%block>
 <%block name="breadcrumbs">
-    <li>${h.link(ability.__parent__, 'Abilities')}</li>
+    <li>${h.link(req.context.__parent__, 'Abilities')}</li>
     <li>${ability.name}</li>
 </%block>
 

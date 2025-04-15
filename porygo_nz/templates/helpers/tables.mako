@@ -2,7 +2,9 @@
 <%!
     import itertools
 
-    import porydex.db
+    from porydex.db import AbilitySlot
+    from porygo_nz.views.ability import AbilityResource
+    from porygo_nz.views.pokemon import PokemonResource
 
 
     tall_pokemon = (
@@ -16,9 +18,9 @@
     )
 %>
 
-<%def name="pokemon_table(pokemon_forms)">
+<%def name="pokemon_table(pokemon_instances)">
 <%
-    pokemon = itertools.groupby(pokemon_forms, lambda form: form.pokemon)
+    pokemon = itertools.groupby(pokemon_instances, lambda p: p.pokemon_form.pokemon)
     pokemon = [(key, list(group)) for (key, group) in pokemon]
 %>
 
@@ -39,28 +41,29 @@
         <th class="stat-cell"><abbr title="Hit Points">HP</abbr></th>
         <th class="stat-cell"><abbr title="Attack">Atk</abbr></th>
         <th class="stat-cell"><abbr title="Defense">Def</abbr></th>
-        % if req.generation is None or req.generation.id >= 2:
+        % if req.game is None or req.game.generation_id >= 2:
             <th class="stat-cell"><abbr title="Special Attack">SpA</abbr></th>
             <th class="stat-cell"><abbr title="Special Defense">SpD</abbr></th>
         % endif
         <th class="stat-cell"><abbr title="Speed">Spe</abbr></th>
-        % if req.generation is not None and req.generation.id == 1:
+        % if req.game is not None and req.game.generation_id == 1:
             <th class="stat-cell"><abbr title="Special">Spc</abbr></th>
         % endif
     </tr>
 </thead>
 
-% for (a_pokemon, pokemon_forms) in pokemon:
+% for (a_pokemon, pokemon_instances) in pokemon:
     <tbody>
-        % for pokemon_form in pokemon_forms:
-            ${pokemon_form_row(pokemon_form)}
+        % for pokemon_instance in pokemon_instances:
+            ${pokemon_row(pokemon_instance)}
         % endfor
     </tbody>
 % endfor
 </table>
 </%def>
 
-<%def name="pokemon_form_row(form)">
+<%def name="pokemon_row(pokemon)">
+<% form = pokemon.pokemon_form %>
 <tr>
     <td class="pokemon-icon-cell">
         <%
@@ -73,7 +76,8 @@
     </td>
 
     <td class="pokemon-cell">
-        <a href="${req.resource_path(form.__parent__, form.__name__)}">
+        <% resource = PokemonResource(form, request) %>
+        <a href="${req.resource_path(resource.__parent__, resource.__name__)}">
             ${form.pokemon.name}
             % if form.name:
                 <span class="pokemon-form-name expanded-only">
@@ -83,16 +87,16 @@
         </a>
     </td>
 
-    <td class="type-list-cell">${h.type_list(form.types)}</td>
+    <td class="type-list-cell">${h.type_list(pokemon.types)}</td>
 
     % if req.show_abilities:
-        ${ability_cell(form, hidden=False)}
+        ${ability_cell(pokemon, hidden=False)}
     % endif
     % if req.show_hidden_abilities:
-        ${ability_cell(form, hidden=True)}
+        ${ability_cell(pokemon, hidden=True)}
     % endif
 
-    % for stat in form.stats:
+    % for stat in pokemon.stats:
         <td class="stat-cell stat-cell-${stat.stat.identifier}">
             ${stat.base_stat}
         </td>
@@ -100,29 +104,30 @@
 </tr>
 </%def>
 
-<%def name="ability_cell(pokemon_form, hidden)">
+<%def name="ability_cell(pokemon, hidden)">
     <%
         hidden_slots = (
-            porydex.db.AbilitySlot.hidden_ability,
-            porydex.db.AbilitySlot.unique_ability
+            AbilitySlot.hidden_ability,
+            AbilitySlot.unique_ability
         )
         class_ = 'ability-list-hidden' if hidden else 'ability-list-regular'
     %>
     <td class="ability-list-cell ${class_}">
         <ul>
-            % for pokemon_ability in pokemon_form.pokemon_abilities:
+            % for pokemon_ability in pokemon.pokemon_abilities:
                 % if (pokemon_ability.slot in hidden_slots) == hidden:
                     <li
-                        % if pokemon_ability.slot is porydex.db.AbilitySlot.hidden_ability:
+                        % if pokemon_ability.slot is AbilitySlot.hidden_ability:
                             class="hidden-ability"
-                        % elif pokemon_ability.slot is porydex.db.AbilitySlot.unique_ability:
+                        % elif pokemon_ability.slot is AbilitySlot.unique_ability:
                             class="unique-ability"
                         % endif
                     >
-                        ${h.link(pokemon_ability.ability)}
+                        ${h.link(
+                            AbilityResource(pokemon_ability.ability, request))}
                     </li>
                 % endif
             % endfor
-        </ul>
+       </ul>
     </td>
 </%def>

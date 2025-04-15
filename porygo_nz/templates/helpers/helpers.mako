@@ -1,11 +1,17 @@
+<%!
+    import porydex.db
+    from porygo_nz.views.type import TypeResource
+%>
+
 <%def name="link(thing, text=None)">\
 <a href="${req.resource_path(thing.__parent__, thing.__name__)}">\
-${text or thing.name}\
+${text or thing.item.name}\
 </a>\
 </%def>
 
 <%def name="type_link(type)">\
-<a href="${req.resource_path(type.__parent__, type.__name__)}"\
+<% resource = TypeResource(type, req) %>\
+<a href="${req.resource_path(resource.__parent__, resource.__name__)}"\
    class="type type-${type.identifier}">${type.name}</a>\
 </%def>
 

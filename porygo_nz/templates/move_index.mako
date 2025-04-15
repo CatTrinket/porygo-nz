@@ -1,3 +1,5 @@
+<%! from porygo_nz.views.move import MoveResource %>
+
 <%inherit file="base.mako" />
 <%namespace name="h" file="helpers/helpers.mako" />
 
@@ -6,6 +8,6 @@
 
 <ul>
     % for move in moves:
-        <li>${h.link(move)}</li>
+        <li>${h.link(MoveResource(move, request))}</li>
     % endfor
 </ul>

@@ -3,6 +3,6 @@
 
 <%block name="title">${move.name} - Moves - porygo.nz</%block>
 <%block name="breadcrumbs">
-    <li>${h.link(move.__parent__, 'Moves')}</li>
+    <li>${h.link(request.context.__parent__, 'Moves')}</li>
     <li>${move.name}</li>
 </%block>

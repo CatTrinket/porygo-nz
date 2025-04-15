@@ -1,70 +1,107 @@
 from pyramid.view import view_config
+import sqlalchemy as sa
 
-import porydex.db
-import porygo_nz.db
-import porygo_nz.resources
+from porydex import db
+import porygo_nz.db_util
+from porygo_nz.resources import HomeResource, LookupResource, Resource
 
 
-class AbilityView:
-    """Views related to abilities."""
+@HomeResource.child_resource()
+class AbilityIndexResource(Resource):
+    __name__ = 'abilities'
 
+
+@AbilityIndexResource.child_resource()
+class AbilityResource(LookupResource):
+    @classmethod
+    def lookup(cls, request, key):
+        return (
+            request.db.query(db.Ability)
+            .filter_by(identifier=key)
+            .one_or_none()
+        )
+
+    @property
+    def __name__(self):
+        return self.item.identifier
+
+
+@view_config(
+    context=AbilityIndexResource, renderer='/ability_index.mako')
+class AbilityIndexView:
     def __init__(self, request):
         self.request = request
 
-    @view_config(context=porygo_nz.resources.AbilityIndex,
-                 renderer='/ability_index.mako')
-    def index(self):
-        """The ability index."""
+    def __call__(self):
+        return {'abilities': self.abilities()}
 
+    def abilities(self):
         abilities = (
-            self.request.db.query(porydex.db.Ability)
-                .filter(porydex.db.Ability.in_current_gen())
-                .order_by(porydex.db.Ability.id)
-                .all()
+            self.request.db.query(db.Ability)
+            .order_by(db.Ability.id)
+            .options(sa.orm.selectinload(db.Ability._names))
         )
 
-        return {'abilities': abilities}
+        if self.request.game is not None:
+            abilities = (
+                abilities.join(db.AbilityInstance)
+                .filter_by(game_id=self.request.game.id)
+            )
 
-    @view_config(context=porydex.db.Ability, renderer='/ability.mako')
-    def view(self):
-        """An ability's page."""
+        return abilities.all()
 
+
+@view_config(context=AbilityResource, renderer='/ability.mako')
+class AbilityView:
+    def __init__(self, request):
+        self.request = request
+        self.ability = request.context.item
+
+    def __call__(self):
         return {
-            'ability': self.request.context,
+            'ability': self.ability,
             'pokemon_regular': self.pokemon_regular(),
             'pokemon_hidden': self.pokemon_hidden(),
-            'pokemon_unique': self.pokemon_unique()
+            'pokemon_unique': self.pokemon_unique(),
         }
 
-    def pokemon_base(self):
-        return (
-            self.request.db.query(porydex.db.PokemonForm)
-            .join(porydex.db.PokemonForm._current_gpf)
-            .join(porydex.db.GenerationPokemonForm.pokemon_abilities)
-            .filter_by(ability_id=self.request.context.id)
-            .order_by(porydex.db.PokemonForm.order)
+    def _pokemon_base(self):
+        query = (
+            self.request.db.query(db.PokemonInstance)
+            .join(db.PokemonAbility)
+            .filter_by(ability_id=self.ability.id)
+            .join(db.PokemonForm)
+            .order_by(db.PokemonForm.order)
+            .options(*porygo_nz.db_util.pokemon_table_options())
         )
+
+        if self.request.game is not None:
+            query = query.filter(
+                db.PokemonInstance.game_id == self.request.game.id)
+        else:
+            query = query.filter(db.PokemonInstance.is_current)
+
+        return query
 
     def pokemon_regular(self):
         return (
-            self.pokemon_base()
-            .filter(porydex.db.PokemonAbility.slot.in_((
-                porydex.db.AbilitySlot.ability_1,
-                porydex.db.AbilitySlot.ability_2
-            )))
+            self._pokemon_base()
+            .filter(db.PokemonAbility.slot.in_(
+                (db.AbilitySlot.ability_1, db.AbilitySlot.ability_2)
+            ))
             .all()
         )
 
     def pokemon_hidden(self):
         return (
-            self.pokemon_base()
-            .filter_by(slot=porydex.db.AbilitySlot.hidden_ability)
+            self._pokemon_base()
+            .filter(db.PokemonAbility.slot == db.AbilitySlot.hidden_ability)
             .all()
         )
 
     def pokemon_unique(self):
         return (
-            self.pokemon_base()
-            .filter_by(slot=porydex.db.AbilitySlot.unique_ability)
+            self._pokemon_base()
+            .filter(db.PokemonAbility.slot == db.AbilitySlot.unique_ability)
             .all()
         )

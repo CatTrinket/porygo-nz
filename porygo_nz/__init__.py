@@ -1,7 +1,7 @@
 import pyramid.config
 import sqlalchemy
 
-import porygo_nz.db
+import porygo_nz.db_util
 import porygo_nz.request_methods
 import porygo_nz.resources
 
@@ -12,7 +12,7 @@ def main(global_config, **settings):
     settings.setdefault('mako.directories', 'porygo_nz:templates')
 
     engine = sqlalchemy.engine_from_config(settings, 'sqlalchemy.')
-    porygo_nz.db.DBSession.configure(bind=engine)
+    porygo_nz.db_util.DBSession.configure(bind=engine)
 
     config = pyramid.config.Configurator(
         settings=settings, root_factory=porygo_nz.resources.get_root)
@@ -22,7 +22,9 @@ def main(global_config, **settings):
     config.add_static_view('static', 'porygo_nz:static')
 
     config.add_request_method(
-        porygo_nz.db.request_session, name='db', reify=True)
+        lambda _: porygo_nz.db_util.DBSession(), name='db', reify=True)
+    config.add_request_method(
+        porygo_nz.request_methods.game, reify=True)
     config.add_request_method(
         porygo_nz.request_methods.show_abilities, reify=True)
     config.add_request_method(

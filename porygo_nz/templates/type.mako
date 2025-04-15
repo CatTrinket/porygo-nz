@@ -5,7 +5,7 @@
 
 <%block name="title">${type.name} - Types - porygo.nz</%block>
 <%block name="breadcrumbs">
-    <li>${h.link(type.__parent__, 'Types')}</li>
+    <li>${h.link(req.context.__parent__, 'Types')}</li>
     <li>${type.name}</li>
 </%block>
 

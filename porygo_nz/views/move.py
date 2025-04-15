@@ -1,32 +1,62 @@
 from pyramid.view import view_config
+import sqlalchemy as sa
+import sqlalchemy.orm
 
-import porydex.db
-import porygo_nz.db
-import porygo_nz.resources
+from porydex import db
+import porygo_nz.db_util
+from porygo_nz.resources import HomeResource, LookupResource, Resource
 
 
-class MoveView:
-    """Views related to moves."""
+@HomeResource.child_resource()
+class MoveIndexResource(Resource):
+    __name__ = 'moves'
 
+
+@MoveIndexResource.child_resource()
+class MoveResource(LookupResource):
+    @classmethod
+    def lookup(cls, request, key):
+        return (
+            request.db.query(db.Move)
+            .filter_by(identifier=key)
+            .one_or_none()
+        )
+
+    @property
+    def __name__(self):
+        return self.item.identifier
+
+
+@view_config(
+    context=MoveIndexResource, renderer='/move_index.mako')
+class MoveIndexView:
     def __init__(self, request):
         self.request = request
 
-    @view_config(context=porygo_nz.resources.MoveIndex,
-                 renderer='/move_index.mako')
-    def index(self):
-        """The move index."""
+    def __call__(self):
+        return {'moves': self.moves()}
 
+    def moves(self):
         moves = (
-            self.request.db.query(porydex.db.Move)
-                .filter(porydex.db.Move.in_current_gen())
-                .order_by(porydex.db.Move.id)
-                .all()
+            self.request.db.query(db.Move)
+            .order_by(db.Move.id)
+            .options(sa.orm.selectinload(db.Move._names))
         )
 
-        return {'moves': moves}
+        if self.request.game is not None:
+            moves = (
+                moves.join(db.MoveInstance)
+                .filter_by(game_id=self.request.game.id)
+            )
 
-    @view_config(context=porydex.db.Move, renderer='/move.mako')
-    def view(self):
-        """An move's page."""
+        return moves.all()
 
-        return {'move': self.request.context}
+
+@view_config(context=MoveResource, renderer='/move.mako')
+class MoveView:
+    def __init__(self, request):
+        self.request = request
+        self.move = request.context.item
+
+    def __call__(self):
+        return {'move': self.move}

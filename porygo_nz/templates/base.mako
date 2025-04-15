@@ -1,5 +1,11 @@
 <%namespace name="h" file="helpers/helpers.mako" />\
-<% import porygo_nz.resources as res %>\
+<%
+    from porygo_nz.resources import HomeResource
+    from porygo_nz.views.ability import AbilityIndexResource
+    from porygo_nz.views.move import MoveIndexResource
+    from porygo_nz.views.pokemon import PokemonIndexResource
+    from porygo_nz.views.type import TypeIndexResource
+%>\
 <!DOCTYPE html>
 
 <html>
@@ -17,17 +23,14 @@
 
         <nav id="main-nav">
             <ul>
-                <% root = req.root.generation_index or req.root %>
-                <li>${h.link(root['pokemon'], 'Pokémon')}</li>
-                <li>${h.link(root['moves'], 'Moves')}</li>
+                <li>${h.link(PokemonIndexResource(request), 'Pokémon')}</li>
+                <li>${h.link(MoveIndexResource(request), 'Moves')}</li>
 
-                % try:
-                    <% abilities = root['abilities'] %>
-                    <li>${h.link(abilities, 'Abilities')}</li>
-                % except KeyError:
-                % endtry
+                % if request.show_abilities:
+                    <li>${h.link(AbilityIndexResource(request), 'Abilities')}</li>
+                % endif
 
-                <li>${h.link(root['types'], 'Types')}</li>
+                <li>${h.link(TypeIndexResource(request), 'Types')}</li>
             </ul>
         </nav>
     </header>
@@ -35,10 +38,10 @@
     <div id="page">
         <nav id="page-nav">
             <ul id="breadcrumbs">
-                % if req.generation is not None:
+                % if req.game is not None:
                     <li>${h.link(
-                        req.root.generation_index,
-                        text=req.generation.name
+                        HomeResource(request=req, game=req.game),
+                        text=req.game.identifier
                     )}</li>
                 % endif
                 <%block name="breadcrumbs">

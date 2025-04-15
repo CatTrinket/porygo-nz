@@ -1,48 +1,85 @@
 import pyramid.decorator
 import pyramid.view
+import sqlalchemy as sa
+import sqlalchemy.orm
 
 import porydex.db
-import porygo_nz.db
-import porygo_nz.resources
+from porygo_nz.db_util import pokemon_table_options
+from porygo_nz.resources import HomeResource, LookupResource, Resource
 
 
-class TypeView:
-    """Views related to types."""
+@HomeResource.child_resource()
+class TypeIndexResource(Resource):
+    __name__ = 'types'
 
+
+@TypeIndexResource.child_resource()
+class TypeResource(LookupResource):
+    @classmethod
+    def lookup(cls, request, key):
+        return (
+            request.db.query(porydex.db.Type)
+            .filter_by(identifier=key)
+            .one_or_none()
+        )
+
+    @property
+    def __name__(self):
+        return self.item.identifier
+
+
+@pyramid.view.view_config(
+    context=TypeIndexResource, renderer='/type_index.mako')
+class TypeIndexView:
     def __init__(self, request):
         self.request = request
+        self.context = request.context
 
-    @pyramid.view.view_config(
-        context=porygo_nz.resources.TypeIndex, renderer='/type_index.mako')
-    def index(self):
-        """The type index."""
+    def __call__(self):
+        return {'types': self.types()}
 
+    def types(self):
         types = (
             self.request.db.query(porydex.db.Type)
-            .filter(porydex.db.Type.in_current_gen())
             .order_by(porydex.db.Type.id)
-            .all()
+            .options(sa.orm.selectinload(porydex.db.Type._names))
         )
 
-        return {'types': types}
+        if self.context.game is not None:
+            types = (
+                types.join(porydex.db.TypeInstance)
+                .filter_by(game_id=self.context.game.id)
+            )
 
-    @pyramid.view.view_config(context=porydex.db.Type, renderer='/type.mako')
-    def view(self):
-        """A type's page."""
+        return types.all()
 
+
+@pyramid.view.view_config(context=TypeResource, renderer='/type.mako')
+class TypeView:
+    def __init__(self, request):
+        self.request = request
+        self.context = request.context
+
+    def __call__(self):
         return {
-            'type': self.request.context,
-            'pokemon': self.pokemon
+            'type': self.context.item,
+            'pokemon': self.pokemon(),
         }
 
-    @pyramid.decorator.reify
     def pokemon(self):
-        return (
-            self.request.db.query(porydex.db.PokemonForm)
-            .join(porydex.db.PokemonForm._current_gpf)
-            .filter(porydex.db.GenerationPokemonForm.types.any(
-                porydex.db.Type.id == self.request.context.id
-            ))
+        query = (
+            self.request.db.query(porydex.db.PokemonInstance)
+            .join(porydex.db.PokemonType)
+            .join(porydex.db.PokemonInstance.pokemon_form)
+            .filter(porydex.db.PokemonType.type_id == self.context.item.id)
             .order_by(porydex.db.PokemonForm.order)
-            .all()
+            .options(*pokemon_table_options())
         )
+
+        if self.context.game is not None:
+            query = query.filter(
+                porydex.db.PokemonInstance.game_id == self.context.game.id)
+        else:
+            query = query.filter(porydex.db.PokemonInstance.is_current)
+
+        return query.all()

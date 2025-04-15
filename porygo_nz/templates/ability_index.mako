@@ -1,3 +1,5 @@
+<%! from porygo_nz.views.ability import AbilityResource %>
+
 <%inherit file="base.mako" />
 <%namespace name="h" file="helpers/helpers.mako" />
 
@@ -6,6 +8,6 @@
 
 <ul>
     % for ability in abilities:
-        <li>${h.link(ability)}</li>
+        <li>${h.link(AbilityResource(ability, request))}</li>
     % endfor
 </ul>

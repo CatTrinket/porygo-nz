@@ -1,160 +1,188 @@
-import sqlalchemy as sa
-
-import porydex.db
-import porygo_nz.db
+from porydex import db
 
 
-class Root:
-    """A root resource."""
+class ResourceMeta(type):
+    """The metaclass for porygo_nz's resources.
 
-    __name__ = None
-    __parent__ = None
-
-    # This indicates *this* object's generation; it is None even if we have a
-    # generation index as a child
-    generation = None
-
-    def __init__(self, request):
-        self.indices = {}
-        self.generation_index = None
-        self.request = request
-
-    def __getitem__(self, key):
-        """Return the corresponding Index or GenerationIndex."""
-
-        if key in self.indices:
-            # XXX This could be called for reasons other than the initial
-            # traversal; generation should be determined some other way
-            self.request.generation = None
-            return self.indices[key]
-
-        try:
-            generation = (
-                porygo_nz.db.DBSession.query(porydex.db.Generation)
-                .filter_by(identifier=key)
-                .one()
-            )
-        except sa.orm.exc.NoResultFound:
-            raise KeyError
-
-        # XXX See previous "XXX" comment
-        self.request.generation = generation
-        # XXX Same thing
-        self.generation_index = GenerationIndex(generation, self)
-
-        return self.generation_index
-
-    def add_index(self, index_class):
-        """Add a child resource of the given class."""
-
-        index = index_class(self)
-        self.indices[index.__name__] = index
-
-class GenerationIndex:
-    """A generation-specific version of the root."""
-
-    def __init__(self, generation, root_instance):
-        self.__name__ = generation.identifier
-        self.__parent__ = root_instance
-
-        self.generation = generation
-
-    def __getitem__(self, key):
-        """Get an item from the root, but don't return it if it's specific to
-        later generations.
-        """
-
-        item = self.__parent__.indices[key]
-
-        if not item.show_for_current_request():
-            raise KeyError
-
-        return item
-
-class Index:
-    """A resource representing an index page for some table, e.g. all the
-    Pokémon or all the moves.
-
-    The table must have an identifier column to look up children.
+    This adds a couple of internal-use class properties used to keep track of
+    child resources.  See `Resource` for more details.
     """
 
-    table = None
+    def __new__(cls, name, bases, dct):
+        new_class = super().__new__(cls, name, bases, dct)
+        new_class._named_children = {}
+        new_class._lookup_children = []
 
-    def __init__(self, root):
-        self.root_instance = root
-        self.table.__getattr__ = identifier_getattr
-        self.table.__parent__ = self
+        return new_class
 
-    def __getitem__(self, key):
-        """Look up the given key in the associated table."""
 
-        query = (
-            self.root_instance.request.db.query(self.table)
-            .filter_by(identifier=key)
-        )
+class Resource(metaclass=ResourceMeta):
+    """The base class for porygo_nz's resources, using Pyramid traversal.
 
-        if self.__parent__.generation is not None:
-            generation_id = self.__parent__.generation.id
-            query = query.filter(
-                self.table._by_generation.any(generation_id=generation_id))
+    Each resource class keeps track of classes for child resources.  Children
+    can be added with the `child_resource` decorator method; the parent class
+    will then be able to find the child by its `__name__` during traversal.
+    Resources may also have a `lookup` method instead of a static `__name__`;
+    see `LookupResource`.
 
-        try:
-            return query.one()
-        except sa.orm.exc.NoResultFound:
-            raise KeyError
+    Constructor parameters:
+    - `request`: The current request.
+    - `game`: The Pokémon game (a db `Game` object) for this resource.  Use
+      `None` for no game, or `Ellipsis` to get the game from the request.
+      `Ellipsis` is the default; this makes creating resources inside templates
+      to generate URLs nice and concise.  (However, this relies on the
+      request's context already being set up, so any resource methods which
+      create other resources should pass the game along explicitly.)
+    - `_parent`: During traversal, the parent resource should pass itself in
+      using this parameter.  Otherwise, this can be left blank.
+    """
+
+    def __init__(self, request, game=Ellipsis, _parent=None):
+        if game is Ellipsis:
+            game = request.game
+
+        self.request = request
+        self.game = game
+        self._parent = _parent
+
+    @classmethod
+    def child_resource(cls, priority=0):
+        """Return a decorator function to add a resource class as a child of
+        this one.
+
+        The `priority` parameter determines the order in which child classes'
+        `lookup` methods are called; children with higher priorities are tried
+        first, and the first one to return a match is used.  It is not used for
+        children with a static `__name__` instead of a `lookup` method; named
+        children always have priority over lookup children.
+
+        Example usage:
+
+        @ParentResource.child_resource()
+        class ChildResource(Resource):
+            __name__ = 'child'
+            ...
+
+        @ParentResource.child_resource(priority=1)
+        class ChildResource2(LookupResource):
+            @classmethod
+            def lookup(cls, key):
+                ...
+        """
+
+        def _add_child(child_class):
+            # child_class.__name__ is the class name, so we need to go through
+            # __dict__ to get the traversal __name__ defined in the class body
+            name = child_class.__dict__.get('__name__')
+
+            if isinstance(name, str):
+                cls._named_children[name] = child_class
+            elif hasattr(child_class, 'lookup'):
+                cls._lookup_children.append((child_class, priority))
+                cls._lookup_children.sort(key=lambda cls_pri: cls_pri[1])
+            else:
+                raise ValueError(
+                    'Child resource must either have a lookup method, or have '
+                    '__name__ defined on the class as a static string'
+                )
+
+            child_class._parent_class = cls
+
+            return child_class
+
+        return _add_child
 
     @property
     def __parent__(self):
-        """Return the current generation index, if applicable, or else the root
-        resource.
-        """
+        if self._parent is None and self._parent_class is not None:
+            self._parent = self._parent_class(
+                request=self.request, game=self.game)
 
-        return self.root_instance.generation_index or self.root_instance
+        return self._parent
 
-    def show_for_current_request(self):
-        """Return whether this index should be shown for the current request.
-        """
+    def __getitem__(self, key):
+        child_class = self._named_children.get(key)
 
-        return True
+        if child_class is not None:
+            return child_class(
+                request=self.request, game=self.game, _parent=self)
 
-class PokemonIndex(Index):
-    __name__ = 'pokemon'
-    table = porydex.db.PokemonForm
-    # XXX Should redirect e.g. shaymin to shaymin-land
+        # Priority can be ignored here; child_resource already keeps the list
+        # sorted
+        for (child_class, _) in self._lookup_children:
+            context = child_class.lookup(self.request, key)
 
-class MoveIndex(Index):
-    __name__ = 'moves'
-    table = porydex.db.Move
+            if context is not None:
+                return child_class(
+                    context, request=self.request, game=self.game, _parent=self)
 
-class AbilityIndex(Index):
-    __name__ = 'abilities'
-    table = porydex.db.Ability
-
-    def show_for_current_request(self):
-        return self.root_instance.request.show_abilities
-
-class TypeIndex(Index):
-    __name__ = 'types'
-    table = porydex.db.Type
+        raise KeyError
 
 
-def identifier_getattr(self, name):
-    """A method to add to a table class as __getattr__.  Return the object's
-    identifier as its name for Pyramid traversal.
+class LookupResource(Resource):
+    """A base class for a resource that wraps a context item, such as a
+    database object.
+
+    Lookup resources have a `lookup` class method to return the corresponding
+    item.  Whereas `__getitem__` looks up a child resource, `lookup` returns an
+    item to be wrapped by *this* resource.  The parent's `__getitem__` will
+    call this class's `lookup` method, then pass the item back into this
+    class's constructor.
+
+    The context item is assigned to the `item` attribute.  (It's `item` rather
+    than `context` to avoid typing `request.context.context`.  This is a little
+    awkward, since "item" is also a term in the Pokémon games, but there aren't
+    really any less-awkward options.)
     """
 
-    if name == '__name__':
-        return self.identifier
-    else:
-        raise AttributeError
+    def __init__(self, item, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.item = item
+
+    @classmethod
+    def lookup(cls, request, key):
+        """Look up the given key and return the corresponding item."""
+
+        raise NotImplementedError
+
+
+class HomeResource(Resource):
+    """The home page.
+
+    The root resource is one of these, and it also has further children of the
+    same class for each game's version of the front page.
+    """
+
+    @property
+    def __name__(self):
+        if self.game is not None:
+            return self.game.identifier
+        else:
+            return None
+
+    @property
+    def __parent__(self):
+        if self._parent is None and self.game is not None:
+            self._parent = HomeResource(request=self.request, game=None)
+
+        return self._parent
+
+    def __getitem__(self, key):
+        if self.game is None:
+            game = (
+                self.request.db.query(db.Game)
+                .filter_by(identifier=key)
+                .one_or_none()
+            )
+
+            if game is not None:
+                return HomeResource(
+                    request=self.request, game=game, _parent=self)
+
+        return super().__getitem__(key)
+
 
 def get_root(request):
-    """Get a root resource."""
+    """Return a root resource for the given request."""
 
-    root = Root(request)
-    root.add_index(PokemonIndex)
-    root.add_index(MoveIndex)
-    root.add_index(AbilityIndex)
-    root.add_index(TypeIndex)
-
-    return root
+    return HomeResource(request=request, game=None)

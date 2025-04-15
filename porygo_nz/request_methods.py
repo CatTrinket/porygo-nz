@@ -1,34 +1,41 @@
-import porydex.db
-from porygo_nz.db import DBSession
+from porydex import db
 
+
+def game(request):
+    """Return the selected game for the current request.
+
+    This attribute should not be accessed in instances where the request's
+    context isn't done being set up yet; if it is, it will raise
+    AttributeError.
+    """
+
+    return request.context.game
 
 def show_abilities(request):
-    """Return whether abilities exist in the current request's generation."""
+    """Return whether abilities exist in the current request's game."""
 
-    if request.generation is None:
+    if request.game is None:
         return True
 
     query = (
-        DBSession.query(porydex.db.GenerationAbility)
-        .filter_by(generation_id=request.generation.id)
+        request.db.query(db.AbilityInstance)
+        .filter_by(game_id=request.game.id)
     )
 
-    return DBSession.query(query.exists()).scalar()
+    return request.db.query(query.exists()).scalar()
 
 def show_hidden_abilities(request):
-    """Return whether hidden abilities exist in the current request's
-    generation.
-    """
+    """Return whether hidden abilities exist in the current request's game."""
 
-    if request.generation is None:
+    if request.game is None:
         return True
  
     query = (
-        DBSession.query(porydex.db.PokemonAbility)
+        request.db.query(db.PokemonAbility)
         .filter_by(
-            generation_id=request.generation.id,
-            slot=porydex.db.AbilitySlot.hidden_ability
+            game_id=request.game.id,
+            slot=db.AbilitySlot.hidden_ability
         )
     )
 
-    return DBSession.query(query.exists()).scalar()
+    return request.db.query(query.exists()).scalar()
