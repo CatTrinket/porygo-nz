@@ -267,13 +267,11 @@ img.sprite {
 
 img.pokemon-icon {
     background: url(/static/circle.svg) center/36px no-repeat;
-    width: 68px;
+    width: 40px;
     height: 40px;
-    margin: 0 -14px;
-    object-fit: none;
-    object-position: center bottom;
+    /* Only let the 36px background circle take up horizontal space */
+    margin: 0 -2px;
 }
-img.pokemon-icon.tall { object-position: center; }
 
 /* Misc. general-use classes */
 *.pokemon-form-name { font-size: 0.8em; font-style: italic; }
@@ -395,7 +393,7 @@ tbody:nth-of-type(odd) > tr + tr {
 
 td, th { padding: 0 0.5rem; }
 
-*.pokemon-icon-cell { width: 40px; }
+*.pokemon-icon-cell { width: 36px; }
 *.pokemon-icon-cell + * { padding-left: 0; }
 
 *.pokemon-cell { width: 8rem; }
@@ -439,7 +437,6 @@ th.stat-cell {
     }
     td:first-child, th:first-child { padding-left: 1.5rem; }
     td:last-child, th:last-child { padding-right: 1.5rem; }
-    *.pokemon-icon-cell:first-child { padding-left: calc(1.5rem - 2px); }
     th.stat-cell:last-child { padding-right: 1rem; }
 }
 

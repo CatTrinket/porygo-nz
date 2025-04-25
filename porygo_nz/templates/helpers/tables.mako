@@ -5,17 +5,6 @@
     from porydex.db import AbilitySlot
     from porygo_nz.views.ability import AbilityResource
     from porygo_nz.views.pokemon import PokemonResource
-
-
-    tall_pokemon = (
-        'charizard-gigantamax',
-        'meowth-gigantamax',
-        'melmetal-gigantamax',
-        'sandaconda-gigantamax',
-        'alcremie-gigantamax',
-        'duraludon-gigantamax',
-        'eternatus-eternamax'
-    )
 %>
 
 <%def name="pokemon_table(pokemon_instances)">
@@ -66,13 +55,11 @@
 <% form = pokemon.pokemon_form %>
 <tr>
     <td class="pokemon-icon-cell">
-        <%
-            icon_class = 'pokemon-icon sprite'
-            if form.identifier in tall_pokemon:
-                icon_class += ' tall'
-        %>\
-        <img src="/static/pokemon-icons/${form.identifier}.png"
-             class="${icon_class}" alt="">
+        <img
+            src="/static/pokemon-icons/${form.identifier}.png"
+            srcset="/static/pokemon-icons/80px/${form.identifier}.png 2x"
+            class="pokemon-icon" alt=""
+        >
     </td>
 
     <td class="pokemon-cell">
