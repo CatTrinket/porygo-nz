@@ -23,7 +23,7 @@
 
 html { font-size: 16px; }
 
-@media (min-width: 1921px) {
+@media (width > 1920px) {
     /* The letterbox colour for superwide monitors.  Only apply it when needed;
        if something somehow overflows on a smaller size, we don't want it to
        stick out onto the dark turquoise bg. */
@@ -45,7 +45,7 @@ body {
 
 /* Desktop: nav on the left as a sidebar, page on the right; scroll the right
    half while the sidebar stays fixed */
-@media (min-width: 1280px) {
+@media (width >= 1280px) {
     header {
         position: fixed;
         top: 0;
@@ -60,14 +60,14 @@ body {
     }
 }
 
-@media (min-width: 1921px) {
+@media (width > 1920px) {
     /* Keep the header in the right place when we're wide enough to letterbox
     */
     header { left: calc(50% - 960px); }
 }
 
 /* Smaller screens: nav on top, then page */
-@media (max-width: 1279px) {
+@media (width < 1280px) {
     body {
         display: flex;
         flex-direction: column;
@@ -85,7 +85,7 @@ header {
     flex-direction: column;
 }
 
-@media (min-width: 768px) and (max-width: 1279px) {
+@media (768px <= width < 1280px) {
     /* Site title and nav on same row on medium screens only */
     header {
         flex-direction: row;
@@ -116,7 +116,7 @@ a#site-title > img {
     pointer-events: none;
 }
 
-@media (min-width: 768px) and (max-width: 1279px) {
+@media (768px <= width < 1280px) {
     a#site-title { background: var(--turquoise); }
 }
 
@@ -141,7 +141,7 @@ nav#main-nav > ul {
 
 nav#main-nav a { color: inherit; }
 
-@media (min-width: 1280px) {
+@media (width >= 1280px) {
     /* Vertical links in the sidebar */
     nav#main-nav { flex-direction: column; }
     nav#main-nav > ul { flex-direction: column; }
@@ -157,7 +157,7 @@ nav#main-nav a { color: inherit; }
     }
 }
 
-@media (max-width: 1279px) {
+@media (width < 1280px) {
     /* Inline list at the top of the page */
     nav#main-nav {
         flex-direction: row;
@@ -174,7 +174,7 @@ nav#main-nav a { color: inherit; }
     nav#main-nav > ul > li > a:hover { text-decoration: underline; }
 }
 
-@media (max-width: 767px) {
+@media (width < 768px) {
     nav#main-nav {
         flex-direction: column;
         padding: 0.5rem 0;
@@ -197,7 +197,7 @@ nav#page-nav {
     line-height: 1.2;
 }
 
-@media (max-width: 767px) {
+@media (width < 768px) {
     nav#page-nav { padding-right: 1rem; padding-left: 1rem; }
 }
 
@@ -228,7 +228,7 @@ ul#breadcrumbs > li:last-child {
 main { padding: 1rem 2rem; }
 main > *:first-child { margin-top: 0; }
 
-@media (max-width: 768px) {
+@media (width < 768px) {
     main { padding: 0.75rem 1rem; }
 }
 
@@ -426,7 +426,7 @@ th.stat-cell {
     padding-right: 0;
 }
 
-@media (min-width: 1024px) {
+@media (width >= 1024px) {
     /* Only display as an actual table on large enough screens */
     table {
         table-layout: fixed;
@@ -440,7 +440,7 @@ th.stat-cell {
     th.stat-cell:last-child { padding-right: 1rem; }
 }
 
-@media (max-width: 1023px) {
+@media (width < 1024px) {
     /* On screens too small for tables, dismantle the whole thing and arrange
        cells manually */
     table { width: auto; }
@@ -517,7 +517,7 @@ th.stat-cell {
     td.stat-cell-special::before { content: 'Spc:\A0' }
 }
 
-@media (max-width: 499px) {
+@media (width < 500px) {
     /* Split the stats into two rows of three on small enough screens */
     /* (< 500px is about where they stop fitting on one row) */
     td.stat-cell {
