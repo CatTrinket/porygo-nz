@@ -28,4 +28,5 @@ ${t.pokemon_table(pokemon)}
 
 
 <h1>Moves</h1>
-<p class="data-pending">[data pending]</p>
+
+${t.move_table(moves)}

@@ -38,16 +38,19 @@ class MoveIndexView:
 
     def moves(self):
         moves = (
-            self.request.db.query(db.Move)
-            .order_by(db.Move.id)
-            .options(sa.orm.selectinload(db.Move._names))
+            self.request.db.query(db.MoveInstance)
+            .join(db.Move)
+            .order_by(db.Move.identifier)
+            .options([
+                sa.orm.joinedload(db.MoveInstance.move).selectinload(db.Move._names),
+                sa.orm.joinedload(db.MoveInstance.type)
+            ])
         )
 
         if self.request.game is not None:
-            moves = (
-                moves.join(db.MoveInstance)
-                .filter_by(game_id=self.request.game.id)
-            )
+            moves = moves.filter(db.MoveInstance.game_id == self.request.game.id)
+        else:
+            moves = moves.filter(db.MoveInstance.is_current)
 
         return moves.all()
 
@@ -57,6 +60,17 @@ class MoveView:
     def __init__(self, request):
         self.request = request
         self.move = request.context.item
+        move_instance = (
+            self.request.db.query(db.MoveInstance)
+            .filter_by(move_id=self.move.id)
+        )
+
+        if self.request.game is not None:
+            move_instance = move_instance.filter_by(game_id=self.request.game.id)
+        else:
+            move_instance = move_instance.filter_by(is_current=True)
+
+        self.move_instance = move_instance.one_or_none()
 
     def __call__(self):
-        return {'move': self.move}
+        return {'move': self.move, 'move_instance': self.move_instance}

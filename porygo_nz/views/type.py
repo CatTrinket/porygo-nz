@@ -64,7 +64,27 @@ class TypeView:
         return {
             'type': self.context.item,
             'pokemon': self.pokemon(),
+            'moves': self.moves(),
         }
+
+    def moves(self):
+        query = (
+            self.request.db.query(porydex.db.MoveInstance)
+            .join(porydex.db.Move)
+            .filter(porydex.db.MoveInstance.type_id == self.context.item.id)
+            .order_by(porydex.db.Move.identifier)
+            .options([
+               sa.orm.joinedload(porydex.db.MoveInstance.move).selectinload(porydex.db.Move._names),
+               sa.orm.joinedload(porydex.db.MoveInstance.type)
+            ])
+        )
+
+        if self.request.game is not None:
+            query = query.filter(porydex.db.MoveInstance.game_id == self.request.game.id)
+        else:
+            query = query.filter(porydex.db.MoveInstance.is_current)
+
+        return query.all()
 
     def pokemon(self):
         query = (

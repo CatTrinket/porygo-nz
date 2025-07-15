@@ -1,13 +1,11 @@
-<%! from porygo_nz.views.move import MoveResource %>
+<%!
+    from porydex.db.schema import DamageCategory
+    from porygo_nz.views.move import MoveResource
+%>
 
 <%inherit file="base.mako" />
-<%namespace name="h" file="helpers/helpers.mako" />
+<%namespace name="t" file="helpers/tables.mako" />
 
 <%block name="title">Moves - porygo.nz</%block>
 <%block name="breadcrumbs"><li>Moves</li></%block>
-
-<ul>
-    % for move in moves:
-        <li>${h.link(MoveResource(move, request))}</li>
-    % endfor
-</ul>
+${t.move_table(moves)}

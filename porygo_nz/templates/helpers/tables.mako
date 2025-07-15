@@ -2,8 +2,9 @@
 <%!
     import itertools
 
-    from porydex.db import AbilitySlot
+    from porydex.db import AbilitySlot, DamageCategory
     from porygo_nz.views.ability import AbilityResource
+    from porygo_nz.views.move import MoveResource
     from porygo_nz.views.pokemon import PokemonResource
 %>
 
@@ -117,4 +118,63 @@
             % endfor
        </ul>
     </td>
+</%def>
+
+<%def name="move_table(move_instances)">
+<table class="description-table">
+    <thead>
+        <tr>
+            <th class="move-cell">Move</th>
+            <th class="type-cell">Type</th>
+            <th class="type-cell">Category</th>
+            <th class="power-cell"><abbr title="Power">Pow.</abbr></th>
+            <th class="accuracy-cell"><abbr title="Accuracy">Acc.</abbr></th>
+            <th class="pp-cell">PP</th>
+            <th class="description-cell">Summary</th>
+        </tr>
+    </thead>
+    % for move_instance in move_instances:
+        <tr>
+            <td class="move-cell">
+                ${h.link(MoveResource(move_instance.move, request))}
+            </td>
+
+            <td class="type-cell">${h.type_link(move_instance.type)}</td>
+
+            <td class="type-cell">
+                ${h.damage_category_icon(move_instance.category)}
+            </td>
+
+            % if move_instance.power is not None:
+                <td class="power-cell">${move_instance.power}</td>
+            % elif move_instance.category is DamageCategory.status:
+                <td class="power-cell non-numeric">—</td>
+            % else:
+                <td class="power-cell non-numeric">*</td>
+            % endif
+
+            % if move_instance.accuracy is not None:
+                <td class="accuracy-cell">${move_instance.accuracy}%</td>
+            % else:
+                <td class="accuracy-cell non-numeric">—</td>
+            % endif
+
+            % if move_instance.pp is not None:
+                <td class="pp-cell">${move_instance.pp}</td>
+            % else:
+                <td class="pp-cell non-numeric">—</td>
+            % endif
+
+            <td class="description-cell">
+                <% priority = move_instance.priority or 0 %>
+                % if priority > 0:
+                    <span class="priority-positive">+${priority} priority.</span>
+                % elif priority < 0:
+                    <span class="priority-negative">−${-priority} priority.</span>
+                % endif
+                <span class="data-pending">[move descriptions pending]</span>
+            </td>
+        </tr>
+    % endfor
+</table>
 </%def>
